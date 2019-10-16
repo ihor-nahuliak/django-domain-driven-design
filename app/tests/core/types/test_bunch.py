@@ -21,7 +21,7 @@ class TestCase(unittest.TestCase):
         self.assertEqual(1, d.a)
         self.assertEqual(2, d.b)
 
-    def test_it_raises_an_error_reading_unknown_key(self):
+    def test_it_raises_an_attribute_error_reading_unknown_key(self):
         d = bunch(a=1, b=2)
 
         with self.assertRaises(AttributeError) as err_ctx:
