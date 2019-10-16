@@ -12,10 +12,10 @@ Dependencies:
     * ubuntu 16.04
     * python3.7
     * python3.7-dev
-    * postgresql-9.6
-    * postgresql-client-9.6
-    * postgresql-contrib-9.6
-    * postgresql-9.6-postgis-scripts
+    * postgresql-10
+    * postgresql-client-10
+    * postgresql-contrib-10
+    * postgresql-10-postgis-scripts
 
 To install python 3.7 please do:
 ```
@@ -24,16 +24,16 @@ sudo apt-get update &&\
 sudo apt-get install -y python3.7 python3.7-dev
 ```
 
-To install postgresql 9.6 and required extensions please do:
+To install postgresql 10 and required extensions please do:
 ```
 sudo wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add - &&\
 sudo echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" |sudo tee  /etc/apt/sources.list.d/pgdg.list &&\
 sudo apt-get update &&\
 sudo apt-get install -y \
-postgresql-9.6 \
-postgresql-client-9.6 \
-postgresql-contrib-9.6 \
-postgresql-9.6-postgis-scripts
+postgresql-10 \
+postgresql-client-10 \
+postgresql-contrib-10 \
+postgresql-10-postgis-scripts
 ```
 
 To create database with required extensions please do:

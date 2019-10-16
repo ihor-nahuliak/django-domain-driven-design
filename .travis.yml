@@ -1,24 +1,30 @@
 dist: xenial
+sudo: true
 language: python
 python:
   - "3.7"
   - "3.7-dev"  # 3.7 development branch
 addons:
-  postgresql: "9.6"
+  postgresql: "10"
   apt:
     packages:
-    - postgresql-9.6
-    - postgresql-client-9.6
-    - postgresql-contrib-9.6
-    - postgresql-9.6-postgis-scripts
+    - postgresql-10
+    - postgresql-client-10
+    - postgresql-contrib-10
+    - postgresql-10-postgis-2.4
+    - postgresql-10-postgis-2.4-scripts
 env:
   global:
     - PGPORT="5432"
     - DJANGO_SECRET_KEY="testing"
     - DATABASE_NAME="travis_ci_testing"
+    - DATABASE_USERNAME="travis_ci"
+    - DATABASE_PASSWORD="travis_ci"
 before_script:
-  - psql -c 'create database travis_ci_testing;' -U postgres
-  - psql -c 'create extension postgis;' -d travis_ci_testing -U postgres
+  - sudo -u postgres psql -c "CREATE USER travis_ci WITH PASSWORD 'travis_ci'"
+  - sudo -u postgres psql -c "ALTER ROLE travis_ci SUPERUSER"
+  - sudo -u postgres psql -U travis_ci -c 'CREATE DATABASE travis_ci_testing;'
+  - sudo -u postgres psql -U travis_ci -d travis_ci_testing -c 'CREATE EXTENSION postgis;'
 install:
   - pip install -r .requirements/testing.txt
 script:
