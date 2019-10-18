@@ -1,6 +1,8 @@
 import keyword
+from dataclasses import dataclass
 
 
+@dataclass
 class bunch(dict):  # pylint: disable=invalid-name
     """
     Named dictionary.
@@ -21,7 +23,7 @@ class bunch(dict):  # pylint: disable=invalid-name
 
     def __init__(self, *args, **kwds):
         self._validate_keys_list(args[0].keys() if args else kwds.keys())
-        super().__init__(*args, **kwds)
+        super(bunch, self).__init__(*args, **kwds)
         self.__dict__ = self
 
     def __getattr__(self, name):
@@ -29,14 +31,22 @@ class bunch(dict):  # pylint: disable=invalid-name
             return self.__missing__(name)
         return self.__getattribute__(name)
 
-    def __setattr__(self, name, value):
-        if name in self:
-            return self.__setitem__(name, value)
-        return super().__setattr__(name, value)
+    def __getattribute__(self, name):
+        cls = super(bunch, self).__getattribute__('__class__')
+
+        if name in cls.__dataclass_fields__:
+            if name in self:
+                return self.__getitem__(name)
+
+            field = cls.__dataclass_fields__[name]
+            if callable(field.default):
+                return field.default()
+
+        return super(bunch, self).__getattribute__(name)
 
     def __setitem__(self, key, value):
         self._validate_key(key)
-        return super().__setitem__(key, value)
+        return super(bunch, self).__setitem__(key, value)
 
     def __repr__(self):
         ordered_repr = '%s({%s})' % (
