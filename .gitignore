@@ -3,6 +3,8 @@
 
 # Configs
 !.gitignore
+!.dockerignore
+!.docker
 !.requirements
 !.pylintrc
 !.coveragerc

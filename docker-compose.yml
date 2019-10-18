@@ -1,0 +1,26 @@
+version: '3.2'
+
+
+services:
+
+  postgresql:
+      container_name: postgresql
+      build:
+          context: ./.docker/postgresql/
+      restart: always
+      environment:
+          - 'POSTGRES_USER=postgres'
+          - 'POSTGRES_PASSWORD=postgres'
+          - 'POSTGRES_DB=project'
+      ports:
+        - '5432:5432'
+
+  application:
+      container_name: application
+      build:
+          context: ./
+      restart: always
+      environment:
+          - 'DATABASE_PASSWORD=postgres'
+          - 'DJANGO_SECRET_KEY=testing'
+      command: ['python', 'app/manage.py', 'test']
