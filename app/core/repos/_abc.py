@@ -20,6 +20,7 @@ class Repo(metaclass=abc.ABCMeta):
         * ParaEntity has just one required attr: primary key
     """
     entity_class = Type[Entity]
+    para_entity_class = Type[ParaEntity]
 
     @abc.abstractmethod
     def get_count(self, filter_params: Optional[FilterParams] = None) -> int:
