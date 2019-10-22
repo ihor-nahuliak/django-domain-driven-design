@@ -1,13 +1,14 @@
+import logging
 import dataclasses
 from typing import List, Union
 
 from django.db.models import Model, QuerySet as Row
 
-from . import base
+from app.core.types import Entity, ParaEntity
+from app.core.repos import base
 
 
-Entity = base.Entity
-ParaEntity = base.ParaEntity
+logger = logging.getLogger(__name__)
 
 
 class Repo(base.Repo):
@@ -15,16 +16,25 @@ class Repo(base.Repo):
 
     @classmethod
     def _get_filter_queryset(cls, q, filter_params):
+        logger.warning('Method _get_filter_queryset is abstract '
+                       'and should be overwritten in each repo '
+                       'by security reasons.')
         q = q.filter(**filter_params)
         return q
 
     @classmethod
     def _get_scoping_queryset(cls, q, scoping_params):
+        logger.warning('Method _get_scoping_queryset is abstract '
+                       'and should be overwritten in each repo '
+                       'by security reasons.')
         q = q.values_list(*scoping_params.attrs, named=True)
         return q
 
     @classmethod
     def _get_sorting_queryset(cls, q, sorting_params):
+        logger.warning('Method _get_sorting_queryset is abstract '
+                       'and should be overwritten in each repo '
+                       'by security reasons.')
         q = q.order_by(*sorting_params.by)
         return q
 
