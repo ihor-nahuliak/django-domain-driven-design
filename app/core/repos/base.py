@@ -1,13 +1,11 @@
 import abc
-from typing import TypeVar, Type, List, Union, Optional
+from typing import Type, List, Union, Optional
 
-
-Entity = TypeVar['Entity']
-ParaEntity = TypeVar['ParaEntity']
-FilterParams = TypeVar['FilterParams']
-ScopingParams = TypeVar['ScopingParams']
-SortingParams = TypeVar['SortingParams']
-SlicingParams = TypeVar['SlicingParams']
+from app.core.types import FilterParams
+from app.core.types import ScopingParams
+from app.core.types import SortingParams
+from app.core.types import SlicingParams
+from app.core.types import Entity, ParaEntity
 
 
 class Repo(metaclass=abc.ABCMeta):

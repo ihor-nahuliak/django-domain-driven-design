@@ -1,34 +1,29 @@
-import abc
 import dataclasses
-from typing import TypeVar, List, Union
+from typing import List, Union
 
-from django.db.models import Model
+from django.db.models import Model, QuerySet as Row
 
-from . import _abc
-
-
-Row = TypeVar['Row']
-Entity = _abc.Entity
-ParaEntity = _abc.ParaEntity
+from . import base
 
 
-class Repo(_abc.Repo):
+Entity = base.Entity
+ParaEntity = base.ParaEntity
+
+
+class Repo(base.Repo):
     model_class = Model
 
     @classmethod
-    @abc.abstractmethod
     def _get_filter_queryset(cls, q, filter_params):
         q = q.filter(**filter_params)
         return q
 
     @classmethod
-    @abc.abstractmethod
     def _get_scoping_queryset(cls, q, scoping_params):
         q = q.values_list(*scoping_params.attrs, named=True)
         return q
 
     @classmethod
-    @abc.abstractmethod
     def _get_sorting_queryset(cls, q, sorting_params):
         q = q.order_by(*sorting_params.by)
         return q
@@ -150,3 +145,12 @@ class Repo(_abc.Repo):
             item = self._model_to_entity(model)
             items_list.append(item)
         return items_list
+
+    def create_list(self, items_list):
+        return []
+
+    def update_list(self, items_list):
+        return []
+
+    def delete_list(self, filter_params=None):
+        return 0
