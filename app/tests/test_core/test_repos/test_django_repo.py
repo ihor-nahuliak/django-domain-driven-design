@@ -85,6 +85,37 @@ class TestCase(test.TestCase):
         self.assertEqual('Richard', items_list[1].first_name)
         self.assertEqual('Starkey', items_list[1].last_name)
 
+    def test_get_list_scoping_params_returns_filtered_entity_list(self):
+        items_list = self.repo.get_list(
+            scoping_params=types.ScopingParams(attrs=('id', 'username')),
+        )
+
+        self.assertEqual(4, len(items_list))
+
+        self.assertEqual(1, items_list[0].id)
+        self.assertEqual('jlennon', items_list[0].username)
+        self.assertEqual(dataclasses.MISSING, items_list[0].email)
+        self.assertEqual(dataclasses.MISSING, items_list[0].first_name)
+        self.assertEqual(dataclasses.MISSING, items_list[0].last_name)
+
+        self.assertEqual(2, items_list[1].id)
+        self.assertEqual('pmccartney', items_list[1].username)
+        self.assertEqual(dataclasses.MISSING, items_list[1].email)
+        self.assertEqual(dataclasses.MISSING, items_list[1].first_name)
+        self.assertEqual(dataclasses.MISSING, items_list[1].last_name)
+
+        self.assertEqual(3, items_list[2].id)
+        self.assertEqual('gharrison', items_list[2].username)
+        self.assertEqual(dataclasses.MISSING, items_list[2].email)
+        self.assertEqual(dataclasses.MISSING, items_list[2].first_name)
+        self.assertEqual(dataclasses.MISSING, items_list[2].last_name)
+
+        self.assertEqual(4, items_list[3].id)
+        self.assertEqual('rstarkey', items_list[3].username)
+        self.assertEqual(dataclasses.MISSING, items_list[3].email)
+        self.assertEqual(dataclasses.MISSING, items_list[3].first_name)
+        self.assertEqual(dataclasses.MISSING, items_list[3].last_name)
+
     def test_get_item_for_existed_id_returns_entity(self):
         item = self.repo.get_item(filter_params=types.FilterParams(id=2))
 
@@ -98,6 +129,18 @@ class TestCase(test.TestCase):
         item = self.repo.get_item(filter_params=types.FilterParams(id=5))
 
         self.assertIsNone(item)
+
+    def test_get_item_scoping_params_for_existed_id_returns_para_entity(self):
+        item = self.repo.get_item(
+            filter_params=types.FilterParams(id=2),
+            scoping_params=types.ScopingParams(attrs=('id', 'username')),
+        )
+
+        self.assertEqual(2, item.id)
+        self.assertEqual('pmccartney', item.username)
+        self.assertEqual(dataclasses.MISSING, item.email)
+        self.assertEqual(dataclasses.MISSING, item.first_name)
+        self.assertEqual(dataclasses.MISSING, item.last_name)
 
 
 if __name__ == '__main__':
