@@ -1,0 +1,42 @@
+[
+  {
+    "model": "auth.User",
+    "pk": 1,
+    "fields": {
+      "username": "jlennon",
+      "email": "john.lennon@beatles.com",
+      "first_name": "John",
+      "last_name": "Lennon"
+    }
+  },
+  {
+    "model": "auth.User",
+    "pk": 2,
+    "fields": {
+      "username": "pmccartney",
+      "email": "paul.mccartney@beatles.com",
+      "first_name": "Paul",
+      "last_name": "McCartney"
+    }
+  },
+  {
+    "model": "auth.User",
+    "pk": 3,
+    "fields": {
+      "username": "gharrison",
+      "email": "george.harrison@beatles.com",
+      "first_name": "George",
+      "last_name": "Harrison"
+    }
+  },
+  {
+    "model": "auth.User",
+    "pk": 4,
+    "fields": {
+      "username": "rstarkey",
+      "email": "richard.starkey@beatles.com",
+      "first_name": "Richard",
+      "last_name": "Starkey"
+    }
+  }
+]
