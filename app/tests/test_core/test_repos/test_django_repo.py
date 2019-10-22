@@ -85,7 +85,7 @@ class TestCase(test.TestCase):
         self.assertEqual('Richard', items_list[1].first_name)
         self.assertEqual('Starkey', items_list[1].last_name)
 
-    def test_get_list_scoping_params_returns_filtered_entity_list(self):
+    def test_get_list_scoping_params_returns_para_entity_list(self):
         items_list = self.repo.get_list(
             scoping_params=types.ScopingParams(attrs=('id', 'username')),
         )
@@ -115,6 +115,30 @@ class TestCase(test.TestCase):
         self.assertEqual(dataclasses.MISSING, items_list[3].email)
         self.assertEqual(dataclasses.MISSING, items_list[3].first_name)
         self.assertEqual(dataclasses.MISSING, items_list[3].last_name)
+
+    def test_get_list_sorting_params_returns_asc_sorted_entity_list(self):
+        items_list = self.repo.get_list(
+            sorting_params=types.SortingParams(by=('id',)),
+        )
+
+        self.assertEqual(4, len(items_list))
+
+        self.assertEqual(1, items_list[0].id)
+        self.assertEqual(2, items_list[1].id)
+        self.assertEqual(3, items_list[2].id)
+        self.assertEqual(4, items_list[3].id)
+
+    def test_get_list_sorting_params_returns_desc_sorted_entity_list(self):
+        items_list = self.repo.get_list(
+            sorting_params=types.SortingParams(by=('-id',)),
+        )
+
+        self.assertEqual(4, len(items_list))
+
+        self.assertEqual(4, items_list[0].id)
+        self.assertEqual(3, items_list[1].id)
+        self.assertEqual(2, items_list[2].id)
+        self.assertEqual(1, items_list[3].id)
 
     def test_get_item_for_existed_id_returns_entity(self):
         item = self.repo.get_item(filter_params=types.FilterParams(id=2))
