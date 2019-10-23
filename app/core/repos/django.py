@@ -157,7 +157,15 @@ class Repo(base.Repo):
         return items_list
 
     def create_list(self, items_list):
-        return []
+        models_list = []
+        for item in items_list:
+            model = self._entity_to_model(item)
+            models_list.append(model)
+
+        models_list = self.model_class.objects.bulk_create(models_list)
+
+        items_list = [self._model_to_entity(model) for model in models_list]
+        return items_list
 
     def update_list(self, items_list):
         return []

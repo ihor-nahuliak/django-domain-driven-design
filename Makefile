@@ -96,7 +96,7 @@ test-unittest:
 	@echo -e "${STATUS_INFO} test-unittest" ;\
 	DJANGO_SECRET_KEY="testing" \
 	DATABASE_NAME="project_testing" \
-	$(PYTHON) "$(DIR)/app/manage.py" test "$(DIR)/app/tests" ;\
+	$(PYTHON) "$(DIR)/app/manage.py" test "$(DIR)/app" ;\
 	if [ $$? -eq 0 ]; then \
 		echo -e "${STATUS_OK}" ;\
 	else \
