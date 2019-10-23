@@ -56,10 +56,10 @@ class Repo(base.Repo):
     @classmethod
     def _check_if_sort_by_relates_to_db_index(
             cls, sorting_params: SortingParams):
-        # WARNING! by security reasons,
+        # WARNING! By security reasons,
         #   you would like to allow just
         #   some indexes for the repo usage.
-        # TODO: check if related db index
+        #   Check if related db index
         #   defined in the model class
         pass
 
