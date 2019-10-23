@@ -27,6 +27,7 @@ before_install:
 install:
   - pip install -r .requirements/testing.txt
 script:
-  - python app/manage.py test app/tests
+  - python app/manage.py test app
+  - pylint app
 after_success:
   - coveralls
