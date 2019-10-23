@@ -1,0 +1,33 @@
+dist: xenial
+language: python
+python:
+  - "3.7"
+  - "3.7-dev"  # 3.7 development branch
+addons:
+  postgresql: "10"
+  apt:
+    packages:
+    - postgresql-10
+    - postgresql-client-10
+    - postgresql-contrib-10
+    - postgresql-10-postgis-2.4
+    - postgresql-10-postgis-2.4-scripts
+env:
+  global:
+    - PGPORT="5432"
+    - DJANGO_SECRET_KEY="testing"
+    - DATABASE_NAME="travis_ci"
+    - DATABASE_USERNAME="travis_ci"
+    - DATABASE_PASSWORD="travis_ci"
+before_install:
+  - psql -c "CREATE USER travis_ci WITH PASSWORD 'travis_ci';"
+  - psql -c "ALTER ROLE travis_ci SUPERUSER"
+  - psql -U travis_ci -d postgres -c "CREATE DATABASE travis_ci;"
+  - psql -U travis_ci -d travis_ci -c "CREATE EXTENSION postgis;"
+install:
+  - pip install -r .requirements/testing.txt
+script:
+  - python app/manage.py test app
+  - pylint app
+after_success:
+  - coveralls
