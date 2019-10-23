@@ -80,6 +80,20 @@ class defaultbunch(bunch):
     2
     >>> d.c is MISSING
     True
+
+    Use callable factory:
+
+    >>> def factory(self):
+    ...     self.counter += 1
+    ...     return self.counter
+    >>>
+    >>> d = defaultbunch(factory, {'counter': 0})
+    >>> d.a
+    1
+    >>> d.b
+    2
+    >>> d.c
+    3
     """
 
     def __new__(cls, default_factory, *args, **kwargs):
