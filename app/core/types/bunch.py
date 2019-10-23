@@ -67,7 +67,7 @@ class bunch(dict):  # pylint: disable=invalid-name
                 cls._validate_key(key)
 
 
-def defaultbunch(default_factory, *args, **kwargs):
+class defaultbunch(bunch):
     """
     The same like defaultdict.
 
@@ -80,15 +80,31 @@ def defaultbunch(default_factory, *args, **kwargs):
     2
     >>> d.c is MISSING
     True
+
+    Use callable factory:
+
+    >>> def factory(self):
+    ...     self.counter += 1
+    ...     return self.counter
+    >>>
+    >>> d = defaultbunch(factory, {'counter': 0})
+    >>> d.a
+    1
+    >>> d.b
+    2
+    >>> d.c
+    3
     """
 
-    def __missing__(cls, name):  # pylint: disable=unused-argument
-        if callable(default_factory):
-            return default_factory()
-        return default_factory
+    def __new__(cls, default_factory, *args, **kwargs):
+        class_ = type(cls.__name__, (bunch,), {
+            '__factory__': default_factory,
+            '__missing__': cls.__missing__
+        })
+        self_ = class_(*args, **kwargs)
+        return self_
 
-    class_ = type('defaultbunch', (bunch,), {
-        '__missing__': __missing__
-    })(*args, **kwargs)
-
-    return class_
+    def __missing__(self, name):
+        if callable(self.__factory__):
+            return self.__factory__()
+        return self.__factory__
