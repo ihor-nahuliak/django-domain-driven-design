@@ -18,8 +18,8 @@ class TestCase(test.TestCase):
     ]
 
     def setUp(self):
-        @dataclasses.dataclass()
-        class UserEntity:
+        @dataclasses.dataclass
+        class UserEntity(types.Entity):
             id: int
             username: str
             email: str
@@ -195,6 +195,95 @@ class TestCase(test.TestCase):
         self.assertEqual(dataclasses.MISSING, item.email)
         self.assertEqual(dataclasses.MISSING, item.first_name)
         self.assertEqual(dataclasses.MISSING, item.last_name)
+
+    def test_create_list_returns_created_entity_list(self):
+        items_list = self.repo.create_list(items_list=[
+            self.repo.entity_class(
+                id=5,
+                username='stuart',
+                email='stuart.sutcliffe@beatles.com',
+                first_name='Stuart',
+                last_name='Sutcliffe',
+            ),
+            self.repo.entity_class(
+                id=6,
+                username='tmoore',
+                email='tommy.moore@beatles.com',
+                first_name='Tommy',
+                last_name='Moore',
+            ),
+        ])
+
+        self.assertEqual(2, len(items_list))
+
+        self.assertEqual(5, items_list[0].id)
+        self.assertEqual('stuart', items_list[0].username)
+        self.assertEqual('stuart.sutcliffe@beatles.com', items_list[0].email)
+        self.assertEqual('Stuart', items_list[0].first_name)
+        self.assertEqual('Sutcliffe', items_list[0].last_name)
+
+        self.assertEqual(6, items_list[1].id)
+        self.assertEqual('tmoore', items_list[1].username)
+        self.assertEqual('tommy.moore@beatles.com', items_list[1].email)
+        self.assertEqual('Tommy', items_list[1].first_name)
+        self.assertEqual('Moore', items_list[1].last_name)
+
+    def test_create_list_stores_data_that_is_available_to_get_then(self):
+        self.repo.create_list(items_list=[
+            self.repo.entity_class(
+                id=5,
+                username='stuart',
+                email='stuart.sutcliffe@beatles.com',
+                first_name='Stuart',
+                last_name='Sutcliffe',
+            ),
+            self.repo.entity_class(
+                id=6,
+                username='tmoore',
+                email='tommy.moore@beatles.com',
+                first_name='Tommy',
+                last_name='Moore',
+            ),
+        ])
+        items_list = self.repo.get_list()
+
+        self.assertEqual(6, len(items_list))
+
+        self.assertEqual(1, items_list[0].id)
+        self.assertEqual('jlennon', items_list[0].username)
+        self.assertEqual('john.lennon@beatles.com', items_list[0].email)
+        self.assertEqual('John', items_list[0].first_name)
+        self.assertEqual('Lennon', items_list[0].last_name)
+
+        self.assertEqual(2, items_list[1].id)
+        self.assertEqual('pmccartney', items_list[1].username)
+        self.assertEqual('paul.mccartney@beatles.com', items_list[1].email)
+        self.assertEqual('Paul', items_list[1].first_name)
+        self.assertEqual('McCartney', items_list[1].last_name)
+
+        self.assertEqual(3, items_list[2].id)
+        self.assertEqual('gharrison', items_list[2].username)
+        self.assertEqual('george.harrison@beatles.com', items_list[2].email)
+        self.assertEqual('George', items_list[2].first_name)
+        self.assertEqual('Harrison', items_list[2].last_name)
+
+        self.assertEqual(4, items_list[3].id)
+        self.assertEqual('rstarkey', items_list[3].username)
+        self.assertEqual('richard.starkey@beatles.com', items_list[3].email)
+        self.assertEqual('Richard', items_list[3].first_name)
+        self.assertEqual('Starkey', items_list[3].last_name)
+
+        self.assertEqual(5, items_list[4].id)
+        self.assertEqual('stuart', items_list[4].username)
+        self.assertEqual('stuart.sutcliffe@beatles.com', items_list[4].email)
+        self.assertEqual('Stuart', items_list[4].first_name)
+        self.assertEqual('Sutcliffe', items_list[4].last_name)
+
+        self.assertEqual(6, items_list[5].id)
+        self.assertEqual('tmoore', items_list[5].username)
+        self.assertEqual('tommy.moore@beatles.com', items_list[5].email)
+        self.assertEqual('Tommy', items_list[5].first_name)
+        self.assertEqual('Moore', items_list[5].last_name)
 
 
 if __name__ == '__main__':
