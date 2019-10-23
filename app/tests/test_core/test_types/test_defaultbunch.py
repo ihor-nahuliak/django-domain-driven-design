@@ -12,6 +12,7 @@ class TestCase(unittest.TestCase):
         self.assertEqual(1, d.a)
         self.assertEqual(2, d.b)
         self.assertIs(MISSING, d.c)
+        self.assertEqual("defaultbunch({'a': 1, 'b': 2})", repr(d))
 
     def test_create_from_kwargs(self):
         d = defaultbunch(MISSING, a=1, b=2)
@@ -19,6 +20,7 @@ class TestCase(unittest.TestCase):
         self.assertEqual(1, d.a)
         self.assertEqual(2, d.b)
         self.assertIs(MISSING, d.c)
+        self.assertEqual("defaultbunch({'a': 1, 'b': 2})", repr(d))
 
     def test_it_returns_none_reading_unknown_key(self):
         d = defaultbunch(default_factory=None, a=1, b=2)
