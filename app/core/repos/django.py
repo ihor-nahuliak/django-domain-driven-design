@@ -1,45 +1,81 @@
-import logging
 import dataclasses
 from typing import List, Union
 
-from django.db.models import Model, QuerySet as Row
+from django.db.models import Model, QuerySet
 
+from app.core.types import FilterParams
+from app.core.types import ScopingParams
+from app.core.types import SortingParams
+from app.core.types import SlicingParams
 from app.core.types import Entity, ParaEntity
 from app.core.repos import base
-
-
-logger = logging.getLogger(__name__)
 
 
 class Repo(base.Repo):
     model_class = Model
 
     @classmethod
-    def _get_filter_queryset(cls, q, filter_params):
-        logger.warning('Method _get_filter_queryset is abstract '
-                       'and should be overwritten in each repo '
-                       'by security reasons.')
+    def _get_filter_queryset(cls, q: QuerySet, filter_params: FilterParams):
+        # WARNING! by security reasons,
+        #   it must be override in a child class
         q = q.filter(**filter_params)
         return q
 
     @classmethod
-    def _get_scoping_queryset(cls, q, scoping_params):
-        logger.warning('Method _get_scoping_queryset is abstract '
-                       'and should be overwritten in each repo '
-                       'by security reasons.')
+    def _check_if_scope_attrs_is_subset_of_entity_attrs(
+            cls, scoping_params: ScopingParams):
+        attrs_list = cls._get_entity_field_names()
+        unknown_attrs_set = set(scoping_params.attrs).difference(attrs_list)
+        if unknown_attrs_set:
+            raise ValueError('Unknown scoping_params.attrs: '
+                             '%s' % tuple(unknown_attrs_set), scoping_params)
+
+    @classmethod
+    def _validate_scoping_params(cls, scoping_params: ScopingParams):
+        cls._check_if_scope_attrs_is_subset_of_entity_attrs(scoping_params)
+
+    @classmethod
+    def _get_scoping_queryset(cls, q: QuerySet, scoping_params: ScopingParams):
+        cls._validate_scoping_params(scoping_params)
         q = q.values_list(*scoping_params.attrs, named=True)
         return q
 
     @classmethod
-    def _get_sorting_queryset(cls, q, sorting_params):
-        logger.warning('Method _get_sorting_queryset is abstract '
-                       'and should be overwritten in each repo '
-                       'by security reasons.')
+    def _check_if_sort_by_keys_is_subset_of_entity_attrs(
+            cls, sorting_params: SortingParams):
+        attrs_list = cls._get_entity_field_names()
+        unknown_keys_list = []
+        for key in sorting_params.by:
+            attr_name = key.lstrip('-')
+            if attr_name not in attrs_list:
+                unknown_keys_list.append(key)
+        if unknown_keys_list:
+            raise ValueError('Unknown sorting_params.by: '
+                             '%s' % tuple(unknown_keys_list), sorting_params)
+
+    @classmethod
+    def _check_if_sort_by_relates_to_db_index(
+            cls, sorting_params: SortingParams):
+        # WARNING! by security reasons,
+        #   you would like to allow just
+        #   some indexes for the repo usage.
+        # TODO: check if related db index
+        #   defined in the model class
+        pass
+
+    @classmethod
+    def _validate_sorting_params(cls, sorting_params: SortingParams):
+        cls._check_if_sort_by_keys_is_subset_of_entity_attrs(sorting_params)
+        cls._check_if_sort_by_relates_to_db_index(sorting_params)
+
+    @classmethod
+    def _get_sorting_queryset(cls, q: QuerySet, sorting_params: SortingParams):
+        cls._validate_sorting_params(sorting_params)
         q = q.order_by(*sorting_params.by)
         return q
 
     @classmethod
-    def _get_slicing_queryset(cls, q, slicing_params):
+    def _get_slicing_queryset(cls, q: QuerySet, slicing_params: SlicingParams):
         if slicing_params.offset and slicing_params.limit:
             q = q[slicing_params.offset:
                   slicing_params.offset + slicing_params.limit]
@@ -79,14 +115,14 @@ class Repo(base.Repo):
         return [f.name for f in dataclasses.fields(cls.entity_class)]
 
     @classmethod
-    def _model_to_entity(cls, model: Union[Model, Row]
+    def _model_to_entity(cls, model: Union[Model, QuerySet]
                          ) -> Union[Entity, ParaEntity]:
         """
         Returns an entity class instance
         filled from the model instance fields.
         Override this method to change default behaviour.
 
-        :type model: Union[Model, Raw]
+        :type model: Union[Model, QuerySet]
         :param model:
             django model instance (or named tuple)
 
