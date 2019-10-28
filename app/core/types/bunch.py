@@ -1,9 +1,10 @@
+import typing
 import keyword
 
 
-class bunch(dict):  # pylint: disable=invalid-name
+class bunch(typing.Dict[str, typing.Any]):  # pylint: disable=invalid-name
     """
-    Named dictionary.
+    Named dictionary. The class name is lowercase, like "dict".
     Example of usage:
 
     >>> d = bunch({'a': 1, 'b': 2})
@@ -24,21 +25,22 @@ class bunch(dict):  # pylint: disable=invalid-name
         super().__init__(*args, **kwds)
         self.__dict__ = self
 
-    def __getattr__(self, name):
+    def __getattr__(self, name: str) -> typing.Any:
         if hasattr(self.__class__, '__missing__') and name not in self:
             return self.__missing__(name)
         return self.__getattribute__(name)
 
-    def __setattr__(self, name, value):
+    def __setattr__(self, name: str, value: typing.Any) -> typing.NoReturn:
         if name in self:
-            return self.__setitem__(name, value)
-        return super().__setattr__(name, value)
+            self.__setitem__(name, value)
+        else:
+            super().__setattr__(name, value)
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: str, value: typing.Any) -> typing.NoReturn:
         self._validate_key(key)
-        return super().__setitem__(key, value)
+        super().__setitem__(key, value)  # pylint: disable=no-member
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         ordered_repr = '%s({%s})' % (
             self.__class__.__name__,
             ', '.join([
@@ -51,7 +53,7 @@ class bunch(dict):  # pylint: disable=invalid-name
     __str__ = __repr__
 
     @classmethod
-    def _validate_key(cls, key):
+    def _validate_key(cls, key: str) -> typing.NoReturn:
         if not key.isidentifier() or keyword.iskeyword(key):
             raise ValueError(
                 "Invalid key: '%s'. Only letters, "
@@ -61,7 +63,8 @@ class bunch(dict):  # pylint: disable=invalid-name
                 "are not allowed, use 'if_', 'from_' instead." % key, key)
 
     @classmethod
-    def _validate_keys_list(cls, keys_list):
+    def _validate_keys_list(cls, keys_list: typing.List[str]
+                            ) -> typing.NoReturn:
         if keys_list:
             for key in keys_list:
                 cls._validate_key(key)
@@ -69,7 +72,8 @@ class bunch(dict):  # pylint: disable=invalid-name
 
 class defaultbunch(bunch):
     """
-    The same like defaultdict.
+    Named default dictionary. The class name is lowercase, like "defaultdict".
+    Example of usage:
 
     >>> from dataclasses import MISSING
     >>>
@@ -104,7 +108,7 @@ class defaultbunch(bunch):
         self_ = class_(*args, **kwargs)
         return self_
 
-    def __missing__(self, name):
+    def __missing__(self, name: str) -> typing.Any:
         if callable(self.__factory__):
             return self.__factory__()
         return self.__factory__

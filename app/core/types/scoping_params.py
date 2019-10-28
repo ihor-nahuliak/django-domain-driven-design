@@ -1,6 +1,7 @@
+import typing
 import dataclasses
 
 
 @dataclasses.dataclass
 class ScopingParams:
-    attrs: tuple
+    attrs: typing.Tuple[str]

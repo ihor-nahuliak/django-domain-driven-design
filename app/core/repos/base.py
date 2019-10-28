@@ -1,5 +1,5 @@
 import abc
-from typing import Type, List, Union, Optional
+from typing import Type, List, Union, Optional, NoReturn
 
 from app.core.types import FilterParams
 from app.core.types import ScopingParams
@@ -151,7 +151,7 @@ class Repo(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def update_list(self, items_list: List[Union[Entity, ParaEntity]],
                     filter_params: Optional[FilterParams] = None
-                    ) -> None:
+                    ) -> NoReturn:
         """
         Update a list of entities in the storage,
         returns the list of updated entities.
@@ -166,13 +166,13 @@ class Repo(metaclass=abc.ABCMeta):
         :param filter_params:
             Search parameters (to require some additional condition).
 
-        :rtype: None
+        :rtype: NoReturn
         """
         return None
 
     def update_item(self, item: Union[Entity, ParaEntity],
                     filter_params: Optional[FilterParams] = None
-                    ) -> None:
+                    ) -> NoReturn:
         """
         Update an entity in the storage,
         returns the updated entity.
@@ -187,14 +187,14 @@ class Repo(metaclass=abc.ABCMeta):
         :param filter_params:
             Search parameters (to require some additional condition).
 
-        :rtype: None
+        :rtype: NoReturn
 
         """
         self.update_list(items_list=[item], filter_params=filter_params)
 
     @abc.abstractmethod
     def delete_list(self, filter_params: Optional[FilterParams] = None
-                    ) -> None:
+                    ) -> NoReturn:
         """
         Removed entities fro mthe storage
         filtered by filter_params.
@@ -204,7 +204,7 @@ class Repo(metaclass=abc.ABCMeta):
         :param filter_params:
             Search parameters.
 
-        :rtype: None
+        :rtype: NoReturn
 
         """
         return None
