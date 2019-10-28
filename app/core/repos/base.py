@@ -35,7 +35,7 @@ class Repo(metaclass=abc.ABCMeta):
             Found entities total count.
 
         """
-        return 0
+        raise NotImplementedError
 
     @abc.abstractmethod
     def get_list(self, filter_params: Optional[FilterParams] = None,
@@ -73,7 +73,7 @@ class Repo(metaclass=abc.ABCMeta):
             Found entities list.
 
         """
-        return []
+        raise NotImplementedError
 
     def get_item(self, filter_params: FilterParams,
                  scoping_params: Optional[ScopingParams] = None
@@ -128,7 +128,7 @@ class Repo(metaclass=abc.ABCMeta):
             Created entities list
 
         """
-        return []
+        raise NotImplementedError
 
     def create_item(self, item: Entity) -> Entity:
         """
@@ -168,7 +168,7 @@ class Repo(metaclass=abc.ABCMeta):
 
         :rtype: NoReturn
         """
-        return None
+        raise NotImplementedError
 
     def update_item(self, item: Union[Entity, ParaEntity],
                     filter_params: Optional[FilterParams] = None
@@ -207,4 +207,4 @@ class Repo(metaclass=abc.ABCMeta):
         :rtype: NoReturn
 
         """
-        return None
+        raise NotImplementedError
