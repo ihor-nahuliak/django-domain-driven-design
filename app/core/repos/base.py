@@ -1,5 +1,5 @@
 import abc
-from typing import Type, List, Union, Optional, NoReturn
+from typing import Type, ClassVar, List, Union, Optional, NoReturn
 
 from app.core.types import FilterParams
 from app.core.types import ScopingParams
@@ -17,8 +17,8 @@ class Repo(metaclass=abc.ABCMeta):
         * ParaEntity contains just a part of Entity attrs scope
         * ParaEntity has just one required attr: primary key
     """
-    entity_class = Entity  # type: Type[Entity]
-    para_entity_class = ParaEntity  # type: Type[ParaEntity]
+    entity_class: ClassVar[Type[Entity]] = Entity
+    para_entity_class: ClassVar[Type[ParaEntity]] = ParaEntity
 
     @abc.abstractmethod
     def get_count(self, filter_params: Optional[FilterParams] = None) -> int:

@@ -1,6 +1,6 @@
 import logging
 import dataclasses
-from typing import Type, List, Union
+from typing import Type, ClassVar, List, Union
 
 from django.db.models import Model, QuerySet
 
@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 class Repo(base.Repo):
-    model_class = Model  # type: Type[Model]
+    model_class: ClassVar[Type[Model]] = Model
 
     @classmethod
     def _get_filter_queryset(cls, q, filter_params):
