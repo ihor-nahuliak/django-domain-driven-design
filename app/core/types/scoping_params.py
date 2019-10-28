@@ -4,4 +4,4 @@ import dataclasses
 
 @dataclasses.dataclass
 class ScopingParams:
-    attrs: typing.Tuple[str]
+    attrs: typing.Tuple[str, ...]

@@ -4,4 +4,4 @@ import dataclasses
 
 @dataclasses.dataclass
 class SortingParams:
-    by: typing.Tuple[str]
+    by: typing.Tuple[str, ...]
