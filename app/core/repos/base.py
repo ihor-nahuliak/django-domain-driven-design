@@ -35,7 +35,7 @@ class Repo(metaclass=abc.ABCMeta):
             Found entities total count.
 
         """
-        raise NotImplementedError
+        return 0
 
     @abc.abstractmethod
     def get_list(self, filter_params: Optional[FilterParams] = None,
@@ -73,7 +73,7 @@ class Repo(metaclass=abc.ABCMeta):
             Found entities list.
 
         """
-        raise NotImplementedError
+        return []
 
     def get_item(self, filter_params: FilterParams,
                  scoping_params: Optional[ScopingParams] = None
@@ -128,7 +128,7 @@ class Repo(metaclass=abc.ABCMeta):
             Created entities list
 
         """
-        raise NotImplementedError
+        return []
 
     def create_item(self, item: Entity) -> Entity:
         """
