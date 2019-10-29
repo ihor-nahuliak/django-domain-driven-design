@@ -187,7 +187,7 @@ class Repo(base.Repo):
                 objs=models_list, fields=fields_set)
 
     def update_batch(self, update_params,
-                     filter_params=None,
+                     filter_params,
                      sorting_params=None,
                      slicing_params=None):
         if not slicing_params:
@@ -205,7 +205,7 @@ class Repo(base.Repo):
             q = self._get_queryset(filter_params=FilterParams(id__in=id__in))
             q.select_for_update().update(**update_params)
 
-    def delete_batch(self, filter_params=None,
+    def delete_batch(self, filter_params,
                      sorting_params=None,
                      slicing_params=None):
         if not slicing_params:

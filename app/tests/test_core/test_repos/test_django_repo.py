@@ -842,6 +842,7 @@ class TestCase(test.TestCase):
     def test_update_batch_returns_none(self):
         result = self.repo.update_batch(
             update_params=types.ParaEntity(email='test@beatles.com'),
+            filter_params=types.FilterParams(),
         )
 
         self.assertIsNone(result)
@@ -849,6 +850,7 @@ class TestCase(test.TestCase):
     def test_update_batch_no_filter_params_updates_all_data(self):
         self.repo.update_batch(
             update_params=types.ParaEntity(email='test@beatles.com'),
+            filter_params=types.FilterParams(),
         )
         items_list = self.repo.get_list(
             sorting_params=types.SortingParams(by=('id',)),
@@ -918,6 +920,7 @@ class TestCase(test.TestCase):
     def test_update_batch_slicing_params_updates_specific_data(self):
         self.repo.update_batch(
             update_params=types.ParaEntity(email='test@beatles.com'),
+            filter_params=types.FilterParams(),
             slicing_params=types.SlicingParams(offset=1, limit=2),
         )
         items_list = self.repo.get_list(
@@ -953,6 +956,7 @@ class TestCase(test.TestCase):
     def test_update_batch_sorting_params_asc_updates_sorting_data(self):
         self.repo.update_batch(
             update_params=types.ParaEntity(email='test@beatles.com'),
+            filter_params=types.FilterParams(),
             sorting_params=types.SortingParams(by=('id',)),
             slicing_params=types.SlicingParams(limit=2),
         )
@@ -989,6 +993,7 @@ class TestCase(test.TestCase):
     def test_update_batch_sorting_params_desc_updates_sorting_data(self):
         self.repo.update_batch(
             update_params=types.ParaEntity(email='test@beatles.com'),
+            filter_params=types.FilterParams(),
             sorting_params=types.SortingParams(by=('-id',)),
             slicing_params=types.SlicingParams(limit=2),
         )
@@ -1023,12 +1028,16 @@ class TestCase(test.TestCase):
         self.assertEqual('Starkey', items_list[3].last_name)
 
     def test_delete_batch_returns_none(self):
-        result = self.repo.delete_batch()
+        result = self.repo.delete_batch(
+            filter_params=types.FilterParams(),
+        )
 
         self.assertIsNone(result)
 
     def test_delete_batch_no_params_removes_all_data(self):
-        self.repo.delete_batch()
+        self.repo.delete_batch(
+            filter_params=types.FilterParams(),
+        )
         items_list = self.repo.get_list(
             sorting_params=types.SortingParams(by=('id',)),
         )
@@ -1059,6 +1068,7 @@ class TestCase(test.TestCase):
 
     def test_delete_batch_slicing_params_removes_paginated_data(self):
         self.repo.delete_batch(
+            filter_params=types.FilterParams(),
             slicing_params=types.SlicingParams(offset=1, limit=2),
         )
         items_list = self.repo.get_list(
@@ -1081,6 +1091,7 @@ class TestCase(test.TestCase):
 
     def test_delete_batch_sorting_params_asc_removes_sorting_data(self):
         self.repo.delete_batch(
+            filter_params=types.FilterParams(),
             sorting_params=types.SortingParams(by=('id',)),
             slicing_params=types.SlicingParams(limit=2),
         )
@@ -1104,6 +1115,7 @@ class TestCase(test.TestCase):
 
     def test_delete_batch_sorting_params_desc_removes_sorting_data(self):
         self.repo.delete_batch(
+            filter_params=types.FilterParams(),
             sorting_params=types.SortingParams(by=('-id',)),
             slicing_params=types.SlicingParams(limit=2),
         )

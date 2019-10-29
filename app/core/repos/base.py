@@ -194,7 +194,7 @@ class Repo(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def update_batch(self, update_params: ParaEntity,
-                     filter_params: Optional[FilterParams] = None,
+                     filter_params: FilterParams,
                      sorting_params: Optional[SortingParams] = None,
                      slicing_params: Optional[SlicingParams] = None
                      ) -> NoReturn:
@@ -208,7 +208,7 @@ class Repo(metaclass=abc.ABCMeta):
         :param update_params:
             Parameters to update.
 
-        :type filter_params: Optional[FilterParams]
+        :type filter_params: FilterParams
         :param filter_params:
             Search parameters.
 
@@ -226,7 +226,7 @@ class Repo(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def delete_batch(self, filter_params: Optional[FilterParams] = None,
+    def delete_batch(self, filter_params: FilterParams,
                      sorting_params: Optional[SortingParams] = None,
                      slicing_params: Optional[SlicingParams] = None
                      ) -> NoReturn:
@@ -236,7 +236,7 @@ class Repo(metaclass=abc.ABCMeta):
             * sorted by sorting_params
             * paginated by slicing_params
 
-        :type filter_params: Optional[FilterParams]
+        :type filter_params: FilterParams
         :param filter_params:
             Search parameters.
 
