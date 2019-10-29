@@ -201,9 +201,10 @@ class Repo(base.Repo):
                                        slicing_params=slicing_params)
 
             id__in = [item.id for item in items_list]
+            filter_params = FilterParams(id__in=id__in)
 
-            q = self._get_queryset(filter_params=FilterParams(id__in=id__in))
-            q.select_for_update().update(**update_params)
+            self.update_batch(update_params=update_params,
+                              filter_params=filter_params)
 
     def delete_batch(self, filter_params,
                      sorting_params=None,
@@ -219,6 +220,6 @@ class Repo(base.Repo):
                                        slicing_params=slicing_params)
 
             id__in = [item.id for item in items_list]
+            filter_params = FilterParams(id__in=id__in)
 
-            q = self._get_queryset(filter_params=FilterParams(id__in=id__in))
-            q.select_for_update().delete()
+            self.delete_batch(filter_params=filter_params)
