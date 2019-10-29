@@ -839,21 +839,204 @@ class TestCase(test.TestCase):
         self.assertEqual('Richard', items_list[3].first_name)
         self.assertEqual('Starkey', items_list[3].last_name)
 
-    def test_delete_list_returns_none(self):
-        result = self.repo.delete_list()
+    def test_update_batch_returns_none(self):
+        result = self.repo.update_batch(
+            update_params=types.ParaEntity(email='test@beatles.com'),
+        )
 
         self.assertIsNone(result)
 
-    def test_delete_list_no_params_removes_all_data(self):
-        self.repo.delete_list()
+    def test_update_batch_no_filter_params_updates_all_data(self):
+        self.repo.update_batch(
+            update_params=types.ParaEntity(email='test@beatles.com'),
+        )
+        items_list = self.repo.get_list(
+            sorting_params=types.SortingParams(by=('id',)),
+        )
+
+        self.assertEqual(4, len(items_list))
+
+        self.assertEqual(1, items_list[0].id)
+        self.assertEqual('jlennon', items_list[0].username)
+        self.assertEqual('test@beatles.com', items_list[0].email)  # updated
+        self.assertEqual('John', items_list[0].first_name)
+        self.assertEqual('Lennon', items_list[0].last_name)
+
+        self.assertEqual(2, items_list[1].id)
+        self.assertEqual('pmccartney', items_list[1].username)
+        self.assertEqual('test@beatles.com', items_list[1].email)  # updated
+        self.assertEqual('Paul', items_list[1].first_name)
+        self.assertEqual('McCartney', items_list[1].last_name)
+
+        self.assertEqual(3, items_list[2].id)
+        self.assertEqual('gharrison', items_list[2].username)
+        self.assertEqual('test@beatles.com', items_list[2].email)  # updated
+        self.assertEqual('George', items_list[2].first_name)
+        self.assertEqual('Harrison', items_list[2].last_name)
+
+        self.assertEqual(4, items_list[3].id)
+        self.assertEqual('rstarkey', items_list[3].username)
+        self.assertEqual('test@beatles.com', items_list[3].email)  # updated
+        self.assertEqual('Richard', items_list[3].first_name)
+        self.assertEqual('Starkey', items_list[3].last_name)
+
+    def test_update_batch_filter_params_updates_specific_data(self):
+        self.repo.update_batch(
+            update_params=types.ParaEntity(email='test@beatles.com'),
+            filter_params=types.FilterParams(id__in=[2, 4]),
+        )
+        items_list = self.repo.get_list(
+            sorting_params=types.SortingParams(by=('id',)),
+        )
+
+        self.assertEqual(4, len(items_list))
+
+        self.assertEqual(1, items_list[0].id)
+        self.assertEqual('jlennon', items_list[0].username)
+        self.assertEqual('john.lennon@beatles.com', items_list[0].email)
+        self.assertEqual('John', items_list[0].first_name)
+        self.assertEqual('Lennon', items_list[0].last_name)
+
+        self.assertEqual(2, items_list[1].id)
+        self.assertEqual('pmccartney', items_list[1].username)
+        self.assertEqual('test@beatles.com', items_list[1].email)  # updated
+        self.assertEqual('Paul', items_list[1].first_name)
+        self.assertEqual('McCartney', items_list[1].last_name)
+
+        self.assertEqual(3, items_list[2].id)
+        self.assertEqual('gharrison', items_list[2].username)
+        self.assertEqual('george.harrison@beatles.com', items_list[2].email)
+        self.assertEqual('George', items_list[2].first_name)
+        self.assertEqual('Harrison', items_list[2].last_name)
+
+        self.assertEqual(4, items_list[3].id)
+        self.assertEqual('rstarkey', items_list[3].username)
+        self.assertEqual('test@beatles.com', items_list[3].email)  # updated
+        self.assertEqual('Richard', items_list[3].first_name)
+        self.assertEqual('Starkey', items_list[3].last_name)
+
+    def test_update_batch_slicing_params_updates_specific_data(self):
+        self.repo.update_batch(
+            update_params=types.ParaEntity(email='test@beatles.com'),
+            slicing_params=types.SlicingParams(offset=1, limit=2),
+        )
+        items_list = self.repo.get_list(
+            sorting_params=types.SortingParams(by=('id',)),
+        )
+
+        self.assertEqual(4, len(items_list))
+
+        self.assertEqual(1, items_list[0].id)
+        self.assertEqual('jlennon', items_list[0].username)
+        self.assertEqual('john.lennon@beatles.com', items_list[0].email)
+        self.assertEqual('John', items_list[0].first_name)
+        self.assertEqual('Lennon', items_list[0].last_name)
+
+        self.assertEqual(2, items_list[1].id)
+        self.assertEqual('pmccartney', items_list[1].username)
+        self.assertEqual('test@beatles.com', items_list[1].email)  # updated
+        self.assertEqual('Paul', items_list[1].first_name)
+        self.assertEqual('McCartney', items_list[1].last_name)
+
+        self.assertEqual(3, items_list[2].id)
+        self.assertEqual('gharrison', items_list[2].username)
+        self.assertEqual('test@beatles.com', items_list[2].email)  # updated
+        self.assertEqual('George', items_list[2].first_name)
+        self.assertEqual('Harrison', items_list[2].last_name)
+
+        self.assertEqual(4, items_list[3].id)
+        self.assertEqual('rstarkey', items_list[3].username)
+        self.assertEqual('richard.starkey@beatles.com', items_list[3].email)
+        self.assertEqual('Richard', items_list[3].first_name)
+        self.assertEqual('Starkey', items_list[3].last_name)
+
+    def test_update_batch_sorting_params_asc_updates_sorting_data(self):
+        self.repo.update_batch(
+            update_params=types.ParaEntity(email='test@beatles.com'),
+            sorting_params=types.SortingParams(by=('id',)),
+            slicing_params=types.SlicingParams(limit=2),
+        )
+        items_list = self.repo.get_list(
+            sorting_params=types.SortingParams(by=('id',)),
+        )
+
+        self.assertEqual(4, len(items_list))
+
+        self.assertEqual(1, items_list[0].id)
+        self.assertEqual('jlennon', items_list[0].username)
+        self.assertEqual('test@beatles.com', items_list[0].email)  # updated
+        self.assertEqual('John', items_list[0].first_name)
+        self.assertEqual('Lennon', items_list[0].last_name)
+
+        self.assertEqual(2, items_list[1].id)
+        self.assertEqual('pmccartney', items_list[1].username)
+        self.assertEqual('test@beatles.com', items_list[1].email)  # updated
+        self.assertEqual('Paul', items_list[1].first_name)
+        self.assertEqual('McCartney', items_list[1].last_name)
+
+        self.assertEqual(3, items_list[2].id)
+        self.assertEqual('gharrison', items_list[2].username)
+        self.assertEqual('george.harrison@beatles.com', items_list[2].email)
+        self.assertEqual('George', items_list[2].first_name)
+        self.assertEqual('Harrison', items_list[2].last_name)
+
+        self.assertEqual(4, items_list[3].id)
+        self.assertEqual('rstarkey', items_list[3].username)
+        self.assertEqual('richard.starkey@beatles.com', items_list[3].email)
+        self.assertEqual('Richard', items_list[3].first_name)
+        self.assertEqual('Starkey', items_list[3].last_name)
+
+    def test_update_batch_sorting_params_desc_updates_sorting_data(self):
+        self.repo.update_batch(
+            update_params=types.ParaEntity(email='test@beatles.com'),
+            sorting_params=types.SortingParams(by=('-id',)),
+            slicing_params=types.SlicingParams(limit=2),
+        )
+        items_list = self.repo.get_list(
+            sorting_params=types.SortingParams(by=('id',)),
+        )
+
+        self.assertEqual(4, len(items_list))
+
+        self.assertEqual(1, items_list[0].id)
+        self.assertEqual('jlennon', items_list[0].username)
+        self.assertEqual('john.lennon@beatles.com', items_list[0].email)
+        self.assertEqual('John', items_list[0].first_name)
+        self.assertEqual('Lennon', items_list[0].last_name)
+
+        self.assertEqual(2, items_list[1].id)
+        self.assertEqual('pmccartney', items_list[1].username)
+        self.assertEqual('paul.mccartney@beatles.com', items_list[1].email)
+        self.assertEqual('Paul', items_list[1].first_name)
+        self.assertEqual('McCartney', items_list[1].last_name)
+
+        self.assertEqual(3, items_list[2].id)
+        self.assertEqual('gharrison', items_list[2].username)
+        self.assertEqual('test@beatles.com', items_list[2].email)  # updated
+        self.assertEqual('George', items_list[2].first_name)
+        self.assertEqual('Harrison', items_list[2].last_name)
+
+        self.assertEqual(4, items_list[3].id)
+        self.assertEqual('rstarkey', items_list[3].username)
+        self.assertEqual('test@beatles.com', items_list[3].email)  # updated
+        self.assertEqual('Richard', items_list[3].first_name)
+        self.assertEqual('Starkey', items_list[3].last_name)
+
+    def test_delete_batch_returns_none(self):
+        result = self.repo.delete_batch()
+
+        self.assertIsNone(result)
+
+    def test_delete_batch_no_params_removes_all_data(self):
+        self.repo.delete_batch()
         items_list = self.repo.get_list(
             sorting_params=types.SortingParams(by=('id',)),
         )
 
         self.assertEqual(0, len(items_list))
 
-    def test_delete_list_filter_params_removes_filtered_data(self):
-        self.repo.delete_list(
+    def test_delete_batch_filter_params_removes_filtered_data(self):
+        self.repo.delete_batch(
             filter_params=types.FilterParams(id__in=[2, 4]),
         )
         items_list = self.repo.get_list(
@@ -873,6 +1056,74 @@ class TestCase(test.TestCase):
         self.assertEqual('george.harrison@beatles.com', items_list[1].email)
         self.assertEqual('George', items_list[1].first_name)
         self.assertEqual('Harrison', items_list[1].last_name)
+
+    def test_delete_batch_slicing_params_removes_paginated_data(self):
+        self.repo.delete_batch(
+            slicing_params=types.SlicingParams(offset=1, limit=2),
+        )
+        items_list = self.repo.get_list(
+            sorting_params=types.SortingParams(by=('id',)),
+        )
+
+        self.assertEqual(2, len(items_list))
+
+        self.assertEqual(1, items_list[0].id)
+        self.assertEqual('jlennon', items_list[0].username)
+        self.assertEqual('john.lennon@beatles.com', items_list[0].email)
+        self.assertEqual('John', items_list[0].first_name)
+        self.assertEqual('Lennon', items_list[0].last_name)
+
+        self.assertEqual(4, items_list[1].id)
+        self.assertEqual('rstarkey', items_list[1].username)
+        self.assertEqual('richard.starkey@beatles.com', items_list[1].email)
+        self.assertEqual('Richard', items_list[1].first_name)
+        self.assertEqual('Starkey', items_list[1].last_name)
+
+    def test_delete_batch_sorting_params_asc_removes_sorting_data(self):
+        self.repo.delete_batch(
+            sorting_params=types.SortingParams(by=('id',)),
+            slicing_params=types.SlicingParams(limit=2),
+        )
+        items_list = self.repo.get_list(
+            sorting_params=types.SortingParams(by=('id',)),
+        )
+
+        self.assertEqual(2, len(items_list))
+
+        self.assertEqual(3, items_list[0].id)
+        self.assertEqual('gharrison', items_list[0].username)
+        self.assertEqual('george.harrison@beatles.com', items_list[0].email)
+        self.assertEqual('George', items_list[0].first_name)
+        self.assertEqual('Harrison', items_list[0].last_name)
+
+        self.assertEqual(4, items_list[1].id)
+        self.assertEqual('rstarkey', items_list[1].username)
+        self.assertEqual('richard.starkey@beatles.com', items_list[1].email)
+        self.assertEqual('Richard', items_list[1].first_name)
+        self.assertEqual('Starkey', items_list[1].last_name)
+
+    def test_delete_batch_sorting_params_desc_removes_sorting_data(self):
+        self.repo.delete_batch(
+            sorting_params=types.SortingParams(by=('-id',)),
+            slicing_params=types.SlicingParams(limit=2),
+        )
+        items_list = self.repo.get_list(
+            sorting_params=types.SortingParams(by=('id',)),
+        )
+
+        self.assertEqual(2, len(items_list))
+
+        self.assertEqual(1, items_list[0].id)
+        self.assertEqual('jlennon', items_list[0].username)
+        self.assertEqual('john.lennon@beatles.com', items_list[0].email)
+        self.assertEqual('John', items_list[0].first_name)
+        self.assertEqual('Lennon', items_list[0].last_name)
+
+        self.assertEqual(2, items_list[1].id)
+        self.assertEqual('pmccartney', items_list[1].username)
+        self.assertEqual('paul.mccartney@beatles.com', items_list[1].email)
+        self.assertEqual('Paul', items_list[1].first_name)
+        self.assertEqual('McCartney', items_list[1].last_name)
 
 
 if __name__ == '__main__':
