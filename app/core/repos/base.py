@@ -193,16 +193,60 @@ class Repo(metaclass=abc.ABCMeta):
         self.update_list(items_list=[item], filter_params=filter_params)
 
     @abc.abstractmethod
-    def delete_list(self, filter_params: Optional[FilterParams] = None
-                    ) -> NoReturn:
+    def update_batch(self, update_params: ParaEntity,
+                     filter_params: FilterParams,
+                     sorting_params: Optional[SortingParams] = None,
+                     slicing_params: Optional[SlicingParams] = None
+                     ) -> NoReturn:
         """
-        Removed entities fro mthe storage
-        filtered by filter_params.
-        Returns removed entities count.
+        Update all entities which meet the criteria:
+            * filtered by filter_params
+            * sorted by sorting_params
+            * paginated by slicing_params
 
-        :type filter_params: Optional[FilterParams]
+        :type update_params: ParaEntity
+        :param update_params:
+            Parameters to update.
+
+        :type filter_params: FilterParams
         :param filter_params:
             Search parameters.
+
+        :type sorting_params: Optional[SortingParams]
+        :param sorting_params:
+            Soring parameters.
+
+        :type slicing_params: Optional[SlicingParams]
+        :param slicing_params:
+            Pagination parameters.
+
+        :rtype: NoReturn
+
+        """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def delete_batch(self, filter_params: FilterParams,
+                     sorting_params: Optional[SortingParams] = None,
+                     slicing_params: Optional[SlicingParams] = None
+                     ) -> NoReturn:
+        """
+        Remove all entities which meet the criteria:
+            * filtered by filter_params
+            * sorted by sorting_params
+            * paginated by slicing_params
+
+        :type filter_params: FilterParams
+        :param filter_params:
+            Search parameters.
+
+        :type sorting_params: Optional[SortingParams]
+        :param sorting_params:
+            Soring parameters.
+
+        :type slicing_params: Optional[SlicingParams]
+        :param slicing_params:
+            Pagination parameters.
 
         :rtype: NoReturn
 

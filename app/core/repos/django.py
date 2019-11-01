@@ -4,7 +4,7 @@ from typing import Type, ClassVar, List, Union
 
 from django.db.models import Model, QuerySet
 
-from app.core.types import FilterParams
+from app.core.types import FilterParams, ScopingParams
 from app.core.types import Entity, ParaEntity
 from app.core.repos import base
 
@@ -186,6 +186,40 @@ class Repo(base.Repo):
             self.model_class.objects.bulk_update(
                 objs=models_list, fields=fields_set)
 
-    def delete_list(self, filter_params=None):
-        q = self._get_queryset(filter_params=filter_params)
-        q.select_for_update().delete()
+    def update_batch(self, update_params,
+                     filter_params,
+                     sorting_params=None,
+                     slicing_params=None):
+        if not slicing_params:
+            q = self._get_queryset(filter_params=filter_params)
+            q.select_for_update().update(**update_params)
+        else:
+            scoping_params = ScopingParams(attrs=('id',))
+            items_list = self.get_list(filter_params=filter_params,
+                                       scoping_params=scoping_params,
+                                       sorting_params=sorting_params,
+                                       slicing_params=slicing_params)
+
+            id__in = [item.id for item in items_list]
+            filter_params = FilterParams(id__in=id__in)
+
+            self.update_batch(update_params=update_params,
+                              filter_params=filter_params)
+
+    def delete_batch(self, filter_params,
+                     sorting_params=None,
+                     slicing_params=None):
+        if not slicing_params:
+            q = self._get_queryset(filter_params=filter_params)
+            q.select_for_update().delete()
+        else:
+            scoping_params = ScopingParams(attrs=('id',))
+            items_list = self.get_list(filter_params=filter_params,
+                                       scoping_params=scoping_params,
+                                       sorting_params=sorting_params,
+                                       slicing_params=slicing_params)
+
+            id__in = [item.id for item in items_list]
+            filter_params = FilterParams(id__in=id__in)
+
+            self.delete_batch(filter_params=filter_params)
