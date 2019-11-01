@@ -58,7 +58,7 @@ class Repo(base.Repo):
                       scoping_params=None,
                       sorting_params=None,
                       slicing_params=None):
-        q = self.model_class.objects.get_queryset()
+        q = self.model_class.objects.get_queryset().using(self._conn.alias)
 
         if filter_params:
             q = self._get_filter_queryset(q=q, filter_params=filter_params)
@@ -72,7 +72,6 @@ class Repo(base.Repo):
         if slicing_params:
             q = self._get_slicing_queryset(q=q, slicing_params=slicing_params)
 
-        q = q.using(self._conn.alias)
         return q
 
     @classmethod
