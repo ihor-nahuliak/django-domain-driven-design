@@ -15,6 +15,10 @@ logger = logging.getLogger(__name__)
 class Repo(base.Repo):
     model_class: ClassVar[Type[Model]] = Model
 
+    def __init__(self, conn):
+        super().__init__()
+        self._conn = conn
+
     @classmethod
     def _get_filter_queryset(cls, q, filter_params):
         logger.warning('Method _get_filter_queryset is abstract '
@@ -50,25 +54,25 @@ class Repo(base.Repo):
             q = q[:slicing_params.limit]
         return q
 
-    @classmethod
-    def _get_queryset(cls, filter_params=None,
+    def _get_queryset(self, filter_params=None,
                       scoping_params=None,
                       sorting_params=None,
                       slicing_params=None):
-        q = cls.model_class.objects.get_queryset()
+        q = self.model_class.objects.get_queryset()
 
         if filter_params:
-            q = cls._get_filter_queryset(q=q, filter_params=filter_params)
+            q = self._get_filter_queryset(q=q, filter_params=filter_params)
 
         if scoping_params:
-            q = cls._get_scoping_queryset(q=q, scoping_params=scoping_params)
+            q = self._get_scoping_queryset(q=q, scoping_params=scoping_params)
 
         if sorting_params:
-            q = cls._get_sorting_queryset(q=q, sorting_params=sorting_params)
+            q = self._get_sorting_queryset(q=q, sorting_params=sorting_params)
 
         if slicing_params:
-            q = cls._get_slicing_queryset(q=q, slicing_params=slicing_params)
+            q = self._get_slicing_queryset(q=q, slicing_params=slicing_params)
 
+        q = q.using(self._conn.alias)
         return q
 
     @classmethod
@@ -148,7 +152,7 @@ class Repo(base.Repo):
                                sorting_params=sorting_params,
                                slicing_params=slicing_params)
         items_list = []
-        for model in q:
+        for model in q.all():
             item = self._model_to_entity(model)
             items_list.append(item)
         return items_list
@@ -159,7 +163,8 @@ class Repo(base.Repo):
             model = self._entity_to_model(item)
             models_list.append(model)
 
-        models_list = self.model_class.objects.bulk_create(models_list)
+        q = self._get_queryset()
+        models_list = q.bulk_create(models_list)
 
         items_list = [self._model_to_entity(model) for model in models_list]
         return items_list
@@ -175,7 +180,7 @@ class Repo(base.Repo):
         q = q.select_for_update()
 
         models_list = []
-        for model in q:
+        for model in q.all():
             for k, v in items_dict[model.id].__dict__.items():
                 if k in attrs_list and k != 'id':
                     fields_set.add(k)
@@ -183,8 +188,9 @@ class Repo(base.Repo):
             models_list.append(model)
 
         if models_list:
-            self.model_class.objects.bulk_update(
-                objs=models_list, fields=fields_set)
+            q = self._get_queryset()
+            q.select_for_update().bulk_update(objs=models_list,
+                                              fields=fields_set)
 
     def update_batch(self, update_params,
                      filter_params,
