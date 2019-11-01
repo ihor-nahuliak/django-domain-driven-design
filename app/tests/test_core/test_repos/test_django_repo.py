@@ -3,6 +3,7 @@ import os
 import dataclasses
 
 from django import test
+from django import db
 from django.contrib import auth
 
 from app.core import types
@@ -30,7 +31,7 @@ class TestCase(test.TestCase):
             model_class = User
             entity_class = UserEntity
 
-        self.repo = Repo()
+        self.repo = Repo(conn=db.connections['default'])
 
     def test_get_count_no_params_returns_not_filtered_count(self):
         total_count = self.repo.get_count()
