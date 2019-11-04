@@ -3,7 +3,9 @@
 
 # Configs
 !.gitignore
+!.githooks
 !.requirements
+!.flake8
 !.pylintrc
 !.coveragerc
 !.coveralls.yml

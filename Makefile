@@ -18,11 +18,12 @@ GLOBAL_PYTHON = /usr/bin/python3.7
 ENV := $(DIR)/env
 PYTHON := $(ENV)/bin/python
 PIP := $(ENV)/bin/pip
+FLAKE8 := $(ENV)/bin/flake8
 PYLINT := $(ENV)/bin/pylint
 
-STATUS_INFO := \033[1;34m*\033[0m
-STATUS_ERROR := \033[1;31m*\033[0m Error
-STATUS_OK := \033[1;32m*\033[0m OK
+STATUS_INFO := \033[1;36m:\033[0m
+STATUS_ERROR := \033[1;31m\xE2\x9C\x96\033[0m [Error]
+STATUS_OK := \033[1;32m\xE2\x9C\x94\033[0m [OK]
 
 
 clean-pyc:
@@ -38,6 +39,15 @@ clean-pyc:
 
 clean: clean-pyc
 
+
+install-git-hooks:
+	@echo -e "${STATUS_INFO} install-git-hooks" ;\
+    ln -sf $(DIR)/.githooks/pre-push $(DIR)/.git/hooks ;\
+	if [ $$? -eq 0 ]; then \
+		echo -e "${STATUS_OK}" ;\
+	else \
+		echo -e "${STATUS_ERROR}" ;\
+	fi;
 
 install-env-python:
 	@echo -e "${STATUS_INFO} install-env-python" ;\
@@ -68,7 +78,7 @@ install-python-libs:
 		echo -e "${STATUS_ERROR}" ;\
 	fi;
 
-install: install-env-python env-activate install-python-libs
+install: install-git-hooks install-env-python env-activate install-python-libs
 
 
 migrate:
@@ -82,6 +92,15 @@ migrate:
 		echo -e "${STATUS_ERROR}" ;\
 	fi;
 
+
+test-flake8:
+	@echo -e "${STATUS_INFO} test-flake8" ;\
+	$(FLAKE8) "$(DIR)/app/" ;\
+	if [ $$? -eq 0 ]; then \
+		echo -e "${STATUS_OK}" ;\
+	else \
+		echo -e "${STATUS_ERROR}" ;\
+	fi;
 
 test-pylint:
 	@echo -e "${STATUS_INFO} test-pylint" ;\
@@ -103,4 +122,4 @@ test-unittest:
 		echo -e "${STATUS_ERROR}" ;\
 	fi;
 
-test: test-unittest test-pylint
+test: test-unittest test-flake8 test-pylint
