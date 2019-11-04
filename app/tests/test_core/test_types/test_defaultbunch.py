@@ -1,7 +1,7 @@
 import unittest
 from dataclasses import MISSING
 
-from app.core.types.bunch import defaultbunch
+from app.core.types._bunch import defaultbunch
 
 
 class TestCase(unittest.TestCase):

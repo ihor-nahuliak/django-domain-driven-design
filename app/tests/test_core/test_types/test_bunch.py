@@ -1,6 +1,6 @@
 import unittest
 
-from app.core.types.bunch import bunch
+from app.core.types._bunch import bunch
 
 
 class TestCase(unittest.TestCase):
