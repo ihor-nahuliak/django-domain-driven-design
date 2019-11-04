@@ -1,29 +1,42 @@
+import abc
 import dataclasses
 
 from app.core.types._bunch import bunch
 
 
-class _EntityMeta(type):
+class _EntityMeta(abc.ABCMeta):
     """
     Entity duck typing metaclass.
     """
+
+    def __new__(mcls, name, bases, namespace, **kwargs):
+        # pylint: disable=bad-mcs-classmethod-argument
+        if bases:
+            raise TypeError('Entity class can not be inherited.')
+        cls = super().__new__(mcls, name, bases, namespace, **kwargs)
+        return cls
 
     def __subclasscheck__(cls, subclass):
         if not dataclasses.is_dataclass(subclass):
             return False
         class_fields_set = cls._get_dataclass_fields_set(cls)
         subclass_fields_set = cls._get_dataclass_fields_set(subclass)
-        is_subclass = class_fields_set.issubset(subclass_fields_set)
+        is_subclass = (
+            class_fields_set.issubset(subclass_fields_set) and
+            super().__subclasscheck__(subclass)
+        )
         return is_subclass
 
     def __instancecheck__(cls, instance):
-        is_instance = cls.__subclasscheck__(type(instance))
+        is_instance = (
+            cls.__subclasscheck__(type(instance)) and
+            super().__instancecheck__(instance)
+        )
         return is_instance
 
     @classmethod
     def _get_dataclass_fields_set(cls, dataclass):
-        fields_set = {(f.name, f.type, f.default)
-                      for f in dataclasses.fields(dataclass)}
+        fields_set = {(f.name, f.type) for f in dataclasses.fields(dataclass)}
         return fields_set
 
 
@@ -43,7 +56,7 @@ class Entity(metaclass=_EntityMeta):
     TypeError: Entity class can not be inherited.
 
     Any dataclass that you make and
-    that contains id fielf can be used as entity:
+    that contains id field can be used as entity:
 
     >>> @dataclasses.dataclass
     ... class Foo:
