@@ -21,9 +21,9 @@ PIP := $(ENV)/bin/pip
 FLAKE8 := $(ENV)/bin/flake8
 PYLINT := $(ENV)/bin/pylint
 
-STATUS_INFO := \033[1;34m*\033[0m
-STATUS_ERROR := \033[1;31m*\033[0m Error
-STATUS_OK := \033[1;32m*\033[0m OK
+STATUS_INFO := \033[1;36m:\033[0m
+STATUS_ERROR := \033[1;31m\xE2\x9C\x96\033[0m [Error]
+STATUS_OK := \033[1;32m\xE2\x9C\x94\033[0m [OK]
 
 
 clean-pyc:
