@@ -4,6 +4,7 @@
 # Configs
 !.gitignore
 !.requirements
+!.flake8
 !.pylintrc
 !.coveragerc
 !.coveralls.yml

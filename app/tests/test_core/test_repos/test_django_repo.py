@@ -142,7 +142,7 @@ class TestCase(test.TestCase):
         self.assertEqual(2, items_list[2].id)
         self.assertEqual(1, items_list[3].id)
 
-    def test_get_list_slicing_params_left_part_returns_paginated_entity_list(self):
+    def test_get_list_slicing_params_left_returns_paginated_entity_list(self):
         items_list = self.repo.get_list(
             slicing_params=types.SlicingParams(offset=0, limit=2),
         )
@@ -152,7 +152,7 @@ class TestCase(test.TestCase):
         self.assertEqual(1, items_list[0].id)
         self.assertEqual(2, items_list[1].id)
 
-    def test_get_list_slicing_params_middle_part_returns_paginated_entity_list(self):
+    def test_get_list_slicing_params_middle_returns_paginated_list(self):
         items_list = self.repo.get_list(
             slicing_params=types.SlicingParams(offset=1, limit=2),
         )
@@ -162,7 +162,7 @@ class TestCase(test.TestCase):
         self.assertEqual(2, items_list[0].id)
         self.assertEqual(3, items_list[1].id)
 
-    def test_get_list_slicing_params_right_part_returns_paginated_entity_list(self):
+    def test_get_list_slicing_params_right_returns_paginated_entity_list(self):
         items_list = self.repo.get_list(
             slicing_params=types.SlicingParams(offset=2, limit=2),
         )
@@ -172,7 +172,7 @@ class TestCase(test.TestCase):
         self.assertEqual(3, items_list[0].id)
         self.assertEqual(4, items_list[1].id)
 
-    def test_get_list_slicing_params_offset_only_returns_paginated_entity_list(self):
+    def test_get_list_slicing_params_offset_returns_paginated_list(self):
         items_list = self.repo.get_list(
             slicing_params=types.SlicingParams(offset=1),
         )
@@ -183,7 +183,7 @@ class TestCase(test.TestCase):
         self.assertEqual(3, items_list[1].id)
         self.assertEqual(4, items_list[2].id)
 
-    def test_get_list_slicing_params_limit_only_returns_paginated_entity_list(self):
+    def test_get_list_slicing_params_limit_returns_paginated_entity_list(self):
         items_list = self.repo.get_list(
             slicing_params=types.SlicingParams(limit=3),
         )
@@ -222,14 +222,14 @@ class TestCase(test.TestCase):
 
     def test_create_list_returns_created_entity_list(self):
         items_list = self.repo.create_list(items_list=[
-            self.repo.entity_class(
+            self.entities.User(
                 id=5,
                 username='stuart',
                 email='stuart.sutcliffe@beatles.com',
                 first_name='Stuart',
                 last_name='Sutcliffe',
             ),
-            self.repo.entity_class(
+            self.entities.User(
                 id=6,
                 username='tmoore',
                 email='tommy.moore@beatles.com',
@@ -254,14 +254,14 @@ class TestCase(test.TestCase):
 
     def test_create_list_stores_data(self):
         self.repo.create_list(items_list=[
-            self.repo.entity_class(
+            self.entities.User(
                 id=5,
                 username='stuart',
                 email='stuart.sutcliffe@beatles.com',
                 first_name='Stuart',
                 last_name='Sutcliffe',
             ),
-            self.repo.entity_class(
+            self.entities.User(
                 id=6,
                 username='tmoore',
                 email='tommy.moore@beatles.com',
@@ -311,7 +311,7 @@ class TestCase(test.TestCase):
 
     def test_create_item_returns_created_entity(self):
         item = self.repo.create_item(
-            item=self.repo.entity_class(
+            item=self.entities.User(
                 id=5,
                 username='stuart',
                 email='stuart.sutcliffe@beatles.com',
@@ -328,7 +328,7 @@ class TestCase(test.TestCase):
 
     def test_create_item_stores_data(self):
         self.repo.create_item(
-            item=self.repo.entity_class(
+            item=self.entities.User(
                 id=5,
                 username='stuart',
                 email='stuart.sutcliffe@beatles.com',
@@ -372,14 +372,14 @@ class TestCase(test.TestCase):
 
     def test_update_list_returns_none(self):
         result = self.repo.update_list(items_list=[
-            self.repo.entity_class(
+            self.entities.User(
                 id=2,
                 username='stuart',
                 email='stuart.sutcliffe@beatles.com',
                 first_name='Stuart',
                 last_name='Sutcliffe',
             ),
-            self.repo.entity_class(
+            self.entities.User(
                 id=4,
                 username='tmoore',
                 email='tommy.moore@beatles.com',
@@ -392,14 +392,14 @@ class TestCase(test.TestCase):
 
     def test_update_list_stores_data(self):
         self.repo.update_list(items_list=[
-            self.repo.entity_class(
+            self.entities.User(
                 id=2,
                 username='stuart',
                 email='stuart.sutcliffe@beatles.com',
                 first_name='Stuart',
                 last_name='Sutcliffe',
             ),
-            self.repo.entity_class(
+            self.entities.User(
                 id=4,
                 username='tmoore',
                 email='tommy.moore@beatles.com',
@@ -482,14 +482,14 @@ class TestCase(test.TestCase):
 
     def test_update_list_filtering_stores_data(self):
         self.repo.update_list(items_list=[
-            self.repo.entity_class(
+            self.entities.User(
                 id=2,
                 username='stuart',
                 email='stuart.sutcliffe@beatles.com',
                 first_name='Stuart',
                 last_name='Sutcliffe',
             ),
-            self.repo.entity_class(
+            self.entities.User(
                 id=4,
                 username='tmoore',
                 email='tommy.moore@beatles.com',
@@ -576,14 +576,14 @@ class TestCase(test.TestCase):
 
     def test_update_list_filtering_does_not_store_data(self):
         self.repo.update_list(items_list=[
-            self.repo.entity_class(
+            self.entities.User(
                 id=2,
                 username='stuart',
                 email='stuart.sutcliffe@beatles.com',
                 first_name='Stuart',
                 last_name='Sutcliffe',
             ),
-            self.repo.entity_class(
+            self.entities.User(
                 id=4,
                 username='tmoore',
                 email='tommy.moore@beatles.com',
@@ -625,7 +625,7 @@ class TestCase(test.TestCase):
 
     def test_update_item_returns_none(self):
         result = self.repo.update_item(
-            item=self.repo.entity_class(
+            item=self.entities.User(
                 id=2,
                 username='stuart',
                 email='stuart.sutcliffe@beatles.com',
@@ -638,7 +638,7 @@ class TestCase(test.TestCase):
 
     def test_update_item_stores_data(self):
         self.repo.update_item(
-            item=self.repo.entity_class(
+            item=self.entities.User(
                 id=2,
                 username='stuart',
                 email='stuart.sutcliffe@beatles.com',
@@ -716,7 +716,7 @@ class TestCase(test.TestCase):
 
     def test_update_item_filtering_stores_data(self):
         self.repo.update_item(
-            item=self.repo.entity_class(
+            item=self.entities.User(
                 id=2,
                 username='stuart',
                 email='stuart.sutcliffe@beatles.com',
@@ -800,7 +800,7 @@ class TestCase(test.TestCase):
 
     def test_update_item_filtering_does_not_store_data(self):
         self.repo.update_item(
-            item=self.repo.entity_class(
+            item=self.entities.User(
                 id=2,
                 username='stuart',
                 email='stuart.sutcliffe@beatles.com',
