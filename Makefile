@@ -40,6 +40,15 @@ clean-pyc:
 clean: clean-pyc
 
 
+install-git-hooks:
+	@echo -e "${STATUS_INFO} install-git-hooks" ;\
+    ln -sf $(DIR)/.githooks/pre-push $(DIR)/.git/hooks ;\
+	if [ $$? -eq 0 ]; then \
+		echo -e "${STATUS_OK}" ;\
+	else \
+		echo -e "${STATUS_ERROR}" ;\
+	fi;
+
 install-env-python:
 	@echo -e "${STATUS_INFO} install-env-python" ;\
 	rm -rf "$(ENV)/" ;\
@@ -69,7 +78,7 @@ install-python-libs:
 		echo -e "${STATUS_ERROR}" ;\
 	fi;
 
-install: install-env-python env-activate install-python-libs
+install: install-git-hooks install-env-python env-activate install-python-libs
 
 
 migrate:
