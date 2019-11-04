@@ -1,6 +1,6 @@
 import dataclasses
 
-from app.core.types.bunch import bunch
+from app.core.types._bunch import bunch
 
 
 @dataclasses.dataclass

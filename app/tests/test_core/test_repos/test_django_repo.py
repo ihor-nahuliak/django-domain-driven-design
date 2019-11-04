@@ -9,8 +9,6 @@ from django.contrib import auth
 from app.core import types
 from app.core.repos import django
 
-User = auth.get_user_model()
-
 
 class TestCase(test.TestCase):
     fixtures = [
@@ -20,16 +18,19 @@ class TestCase(test.TestCase):
 
     def setUp(self):
         @dataclasses.dataclass
-        class UserEntity(types.Entity):
+        class User(types.Entity):
             id: int
             username: str
             email: str
             first_name: str = ''
             last_name: str = ''
 
+        self.entities = types.bunch(User=User)
+        self.models = types.bunch(User=auth.get_user_model())
+
         class Repo(django.Repo):
-            model_class = User
-            entity_class = UserEntity
+            model_class = self.models.User
+            entity_class = self.entities.User
 
         self.repo = Repo(conn=db.connections['default'])
 
