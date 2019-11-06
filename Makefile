@@ -21,6 +21,10 @@ PIP := $(ENV)/bin/pip
 FLAKE8 := $(ENV)/bin/flake8
 PYLINT := $(ENV)/bin/pylint
 
+BRANCH_NAME := $(shell git rev-parse --abbrev-ref HEAD)
+BRANCH_NAME_REGEX := ^[a-z]{2,16}(_[a-z0-9]+){0,16}$
+BRANCH_NAME_MATCH := $(shell echo "$(BRANCH_NAME)" | grep -E "$(BRANCH_NAME_REGEX)")
+
 STATUS_INFO := \033[1;36m:\033[0m
 STATUS_ERROR := \033[1;31m\xE2\x9C\x96\033[0m [Error]
 STATUS_OK := \033[1;32m\xE2\x9C\x94\033[0m [OK]
@@ -35,6 +39,7 @@ clean-pyc:
 		echo -e "${STATUS_OK}" ;\
 	else \
 		echo -e "${STATUS_ERROR}" ;\
+		exit 1 ;\
 	fi;
 
 clean: clean-pyc
@@ -47,6 +52,7 @@ install-git-hooks:
 		echo -e "${STATUS_OK}" ;\
 	else \
 		echo -e "${STATUS_ERROR}" ;\
+		exit 1 ;\
 	fi;
 
 install-env-python:
@@ -57,6 +63,7 @@ install-env-python:
 		echo -e "${STATUS_OK}" ;\
 	else \
 		echo -e "${STATUS_ERROR}" ;\
+		exit 1 ;\
 	fi;
 
 env-activate:
@@ -66,6 +73,7 @@ env-activate:
 		echo -e "${STATUS_OK}" ;\
 	else \
 		echo -e "${STATUS_ERROR}" ;\
+		exit 1 ;\
 	fi;
 
 install-python-libs:
@@ -76,6 +84,7 @@ install-python-libs:
 		echo -e "${STATUS_OK}" ;\
 	else \
 		echo -e "${STATUS_ERROR}" ;\
+		exit 1 ;\
 	fi;
 
 install: install-git-hooks install-env-python env-activate install-python-libs
@@ -90,8 +99,19 @@ migrate:
 		echo -e "${STATUS_OK}" ;\
 	else \
 		echo -e "${STATUS_ERROR}" ;\
+		exit 1 ;\
 	fi;
 
+test-branch-name:
+	@echo -e "${STATUS_INFO} test-branch-name" ;\
+	if [ ${BRANCH_NAME_MATCH} ]; then \
+		echo -e "${STATUS_OK}" ;\
+	else \
+	    echo 'Branch name "${BRANCH_NAME}" is wrong.' ;\
+	    echo 'It should be like: "blahblah" or "blah_blah_123".' ;\
+		echo -e "${STATUS_ERROR}" ;\
+		exit 1 ;\
+	fi;
 
 test-flake8:
 	@echo -e "${STATUS_INFO} test-flake8" ;\
@@ -100,6 +120,7 @@ test-flake8:
 		echo -e "${STATUS_OK}" ;\
 	else \
 		echo -e "${STATUS_ERROR}" ;\
+		exit 1 ;\
 	fi;
 
 test-pylint:
@@ -109,6 +130,7 @@ test-pylint:
 		echo -e "${STATUS_OK}" ;\
 	else \
 		echo -e "${STATUS_ERROR}" ;\
+		exit 1 ;\
 	fi;
 
 test-unittest:
@@ -120,6 +142,7 @@ test-unittest:
 		echo -e "${STATUS_OK}" ;\
 	else \
 		echo -e "${STATUS_ERROR}" ;\
+		exit 1 ;\
 	fi;
 
-test: test-unittest test-flake8 test-pylint
+test: test-branch-name test-unittest test-flake8 test-pylint

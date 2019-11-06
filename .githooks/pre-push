@@ -2,6 +2,8 @@
 
 set -e
 
+echo '\033[1;36m:\033[0m .git/hooks: pre-push'
+
 make migrate
 make test
 
