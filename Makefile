@@ -104,10 +104,11 @@ migrate:
 
 test-branch-name:
 	@echo -e "${STATUS_INFO} test-branch-name" ;\
+	echo 'Brunch: "${BRANCH_NAME}"' ;\
 	if [ ${BRANCH_NAME_MATCH} ]; then \
 		echo -e "${STATUS_OK}" ;\
 	else \
-	    echo 'Branch name "${BRANCH_NAME}" is wrong.' ;\
+	    echo 'Branch name is wrong.' ;\
 	    echo 'It should be like: "blahblah" or "blah_blah_123".' ;\
 		echo -e "${STATUS_ERROR}" ;\
 		exit 1 ;\
