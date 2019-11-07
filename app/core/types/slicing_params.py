@@ -1,7 +1,8 @@
 import dataclasses
+from typing import Optional
 
 
 @dataclasses.dataclass
 class SlicingParams:
-    offset: int = 0
-    limit: int = None
+    offset: Optional[int] = 0
+    limit: Optional[int] = None
