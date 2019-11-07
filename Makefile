@@ -16,10 +16,12 @@ SHELL=/bin/bash
 
 GLOBAL_PYTHON = /usr/bin/python3.7
 ENV := $(DIR)/env
+LIB := $(ENV)/lib/python3.7/site-packages
 PYTHON := $(ENV)/bin/python
 PIP := $(ENV)/bin/pip
 FLAKE8 := $(ENV)/bin/flake8
 PYLINT := $(ENV)/bin/pylint
+PYRE := $(ENV)/bin/pyre
 
 BRANCH_NAME := $(shell git rev-parse --abbrev-ref HEAD)
 BRANCH_NAME_REGEX := ^[a-z]{2,16}(_[a-z0-9]+){0,16}$
@@ -127,6 +129,16 @@ test-flake8:
 test-pylint:
 	@echo -e "${STATUS_INFO} test-pylint" ;\
 	$(PYLINT) "$(DIR)/app/" ;\
+	if [ $$? -eq 0 ]; then \
+		echo -e "${STATUS_OK}" ;\
+	else \
+		echo -e "${STATUS_ERROR}" ;\
+		exit 1 ;\
+	fi;
+
+test-pyre::
+	@echo -e "${STATUS_INFO} test-pylint" ;\
+	$(PYRE) --source-directory="$(DIR)/app/" --search-path="$(LIB)" check ;\
 	if [ $$? -eq 0 ]; then \
 		echo -e "${STATUS_OK}" ;\
 	else \
