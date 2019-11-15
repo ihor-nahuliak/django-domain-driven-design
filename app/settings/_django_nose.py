@@ -8,6 +8,9 @@ TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 NOSE_ARGS = [
     '--with-doctest',
     '--doctest-tests',
+    '--with-timer',
+    '--timer-warning=100ms',
+    '--timer-fail=error',
     '--cover-erase',
     '--with-coverage',
     '--cover-package=app',
