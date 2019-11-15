@@ -9,7 +9,7 @@ NOSE_ARGS = [
     '--with-doctest',
     '--doctest-tests',
     '--with-timer',
-    '--timer-warning=100ms',
+    '--timer-warning=300ms',
     '--timer-fail=error',
     '--cover-erase',
     '--with-coverage',
