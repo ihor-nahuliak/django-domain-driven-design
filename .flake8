@@ -1,0 +1,8 @@
+[flake8]
+max-line-length = 79
+exclude =
+    */migrations/*
+    */settings/*
+    */settings.py
+ignore =
+    # nothing to ignore
