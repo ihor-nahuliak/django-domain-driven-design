@@ -1,7 +1,8 @@
 import os
+import typing
 
 
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', None)
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'testing')
 
 DEBUG = os.environ.get('DJANGO_DEBUG', False)
 
@@ -26,7 +27,7 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-REQUIREMENTS_APPS = [
+REQUIREMENTS_APPS: typing.List[str] = [
     # django:
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,10 +46,10 @@ REQUIREMENTS_APPS = [
     'django.contrib.admin',
 ]
 
-PROJECT_APPS = [
+PROJECT_APPS: typing.List[str] = [
 ]
 
-REQUIREMENTS_MIDDLEWARE = [
+REQUIREMENTS_MIDDLEWARE: typing.List[str] = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -58,5 +59,5 @@ REQUIREMENTS_MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-PROJECT_MIDDLEWARE = [
+PROJECT_MIDDLEWARE: typing.List[str] = [
 ]

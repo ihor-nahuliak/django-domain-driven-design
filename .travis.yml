@@ -15,7 +15,6 @@ addons:
 env:
   global:
     - PGPORT="5432"
-    - DJANGO_SECRET_KEY="testing"
     - DATABASE_NAME="travis_ci"
     - DATABASE_USERNAME="travis_ci"
     - DATABASE_PASSWORD="travis_ci"

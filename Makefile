@@ -23,9 +23,9 @@ PIP := $(ENV)/bin/pip
 PEP8 := $(ENV)/bin/pycodestyle --config="$(DIR)/.pycodestyle"
 FLAKE8 := $(ENV)/bin/flake8 --config="$(DIR)/.flake8"
 PYLINT := $(ENV)/bin/pylint --rcfile="$(DIR)/.pylintrc"
-PYRE := $(ENV)/bin/pyre --no-saved-state --noninteractive --search-path="$(LIB)"
+MYPY := MYPYPATH=$(LIB) $(ENV)/bin/mypy --config-file="$(DIR)/.mypyrc"
 
-STATUS_INFO := \r\n\033[1;94m\xF0\x9F\x91\xA3 \033[0m
+STATUS_INFO := \r\n\033[1;94m\xF0\x9F\x91\xA3\033[0m
 STATUS_ERROR := \033[1;31m\xE2\x9C\x96\033[0m [Error]
 STATUS_OK := \033[1;32m\xE2\x9C\x94\033[0m [OK]
 
@@ -96,7 +96,6 @@ install: install-git-hooks install-env-python env-activate install-python-libs
 migrate:
 	@echo -e "${STATUS_INFO} migrate" ;\
 	cd "$(DIR)/app/" ;\
-	DJANGO_SECRET_KEY="testing" \
 	$(PYTHON) "$(DIR)/app/manage.py" migrate ;\
 	if [ $$? -eq 0 ]; then \
 		echo -e "${STATUS_OK}" ;\
@@ -138,10 +137,10 @@ test-pylint:
 		exit 1 ;\
 	fi;
 
-test-pyre:
-	@echo -e "${STATUS_INFO} test-pyre" ;\
-	$(PYRE) --version ;\
-	$(PYRE) --source-directory="$(DIR)/app" check;\
+test-mypy:
+	@echo -e "${STATUS_INFO} test-mypy" ;\
+	$(MYPY) --version ;\
+	$(MYPY) "$(DIR)/app";\
 	if [ $$? -eq 0 ]; then \
 		echo -e "${STATUS_OK}" ;\
 	else \
@@ -151,7 +150,6 @@ test-pyre:
 
 test-unittest:
 	@echo -e "${STATUS_INFO} test-unittest" ;\
-	DJANGO_SECRET_KEY="testing" \
 	$(PYTHON) "$(DIR)/app/manage.py" test "$(DIR)/app" ;\
 	if [ $$? -eq 0 ]; then \
 		echo -e "${STATUS_OK}" ;\
@@ -160,7 +158,7 @@ test-unittest:
 		exit 1 ;\
 	fi;
 
-test: test-unittest test-pep8 test-flake8 test-pyre test-pylint
+test: test-unittest test-pep8 test-flake8 test-mypy test-pylint
 
 
 install-create-superuser:
@@ -174,7 +172,6 @@ install-create-superuser:
         User.objects.create_superuser('admin', 'admin@localhost', 'admin'); \
 	" | \
 	DJANGO_DEBUG=1 \
-	DJANGO_SECRET_KEY="testing" \
 	$(PYTHON) "$(DIR)/app/manage.py" shell ;\
 	if [ $$? -eq 0 ]; then \
 		echo -e "${STATUS_OK}" ;\
@@ -186,7 +183,6 @@ install-create-superuser:
 run-server:
 	@echo -e "${STATUS_INFO} run" ;\
 	DJANGO_DEBUG=1 \
-	DJANGO_SECRET_KEY="testing" \
 	$(PYTHON) "$(DIR)/app/manage.py" runserver ;\
 	if [ $$? -ne 0 ]; then \
 		echo -e "${STATUS_ERROR}" ;\
