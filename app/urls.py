@@ -19,7 +19,7 @@ from django.urls import include, path
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),  # pyre-ignore
+    path('admin/', admin.site.urls),
     path('admin/', include('rest_framework.urls', namespace='rest_framework')),
     path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
 ]

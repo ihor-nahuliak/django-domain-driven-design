@@ -15,7 +15,6 @@ addons:
 env:
   global:
     - PGPORT="5432"
-    - DJANGO_SECRET_KEY="testing"
     - DATABASE_NAME="travis_ci"
     - DATABASE_USERNAME="travis_ci"
     - DATABASE_PASSWORD="travis_ci"
@@ -32,12 +31,7 @@ script:
   - python app/manage.py test app
   - pycodestyle --config=.pycodestyle app
   - flake8 --config=.flake8 app
-  - |
-      pyre \
-      --no-saved-state \
-      --noninteractive \
-      --search-path="${PYTHON_LIB}" \
-      --source-directory=./app check
+  - mypy --config-file=.mypyrc app
   - pylint --rcfile=.pylintrc app
 after_success:
   - coveralls
