@@ -1,0 +1,7 @@
+[pycodestyle]
+max-line-length = 79
+max-doc-length = 78
+show-source = 1
+show-pep8 = 1
+verbose = 1
+statistics = 1
