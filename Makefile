@@ -18,12 +18,8 @@ SHELL=/bin/bash
 GLOBAL_PYTHON = /usr/bin/python3.7
 ENV := $(DIR)/env
 PYTHON := $(ENV)/bin/python
-LIB := $(ENV)/lib/python3.7/site-packages
 PIP := $(ENV)/bin/pip
-PEP8 := $(ENV)/bin/pycodestyle --config="$(DIR)/.pycodestyle"
-FLAKE8 := $(ENV)/bin/flake8 --config="$(DIR)/.flake8"
-PYLINT := $(ENV)/bin/pylint --rcfile="$(DIR)/.pylintrc"
-MYPY := $(ENV)/bin/mypy --config-file="$(DIR)/.mypyrc"
+TOX := $(ENV)/bin/tox -c="$(DIR)/tox.ini"
 
 STATUS_INFO := \r\n\033[1;94m\xF0\x9F\x91\xA3 \033[0m
 STATUS_ERROR := \033[1;31m\xE2\x9C\x96\033[0m [Error]
@@ -106,8 +102,7 @@ migrate:
 
 test-pep8:
 	@echo -e "${STATUS_INFO} test-pep8" ;\
-	$(PEP8) --version ;\
-	$(PEP8) "$(DIR)/app/" ;\
+	$(TOX) -e=pycodestyle ;\
 	if [ $$? -eq 0 ]; then \
 		echo -e "${STATUS_OK}" ;\
 	else \
@@ -117,8 +112,7 @@ test-pep8:
 
 test-flake8:
 	@echo -e "${STATUS_INFO} test-flake8" ;\
-	$(FLAKE8) --version ;\
-	$(FLAKE8) "$(DIR)/app/" ;\
+	$(TOX) -e=flake8 ;\
 	if [ $$? -eq 0 ]; then \
 		echo -e "${STATUS_OK}" ;\
 	else \
@@ -128,8 +122,7 @@ test-flake8:
 
 test-pylint:
 	@echo -e "${STATUS_INFO} test-pylint" ;\
-	$(PYLINT) --version ;\
-	$(PYLINT) "$(DIR)/app/" ;\
+	$(TOX) -e=pylint ;\
 	if [ $$? -eq 0 ]; then \
 		echo -e "${STATUS_OK}" ;\
 	else \
@@ -139,8 +132,7 @@ test-pylint:
 
 test-mypy:
 	@echo -e "${STATUS_INFO} test-mypy" ;\
-	$(MYPY) --version ;\
-	$(MYPY) "$(DIR)/app";\
+	$(TOX) -e=mypy ;\
 	if [ $$? -eq 0 ]; then \
 		echo -e "${STATUS_OK}" ;\
 	else \
@@ -150,7 +142,7 @@ test-mypy:
 
 test-unittest:
 	@echo -e "${STATUS_INFO} test-unittest" ;\
-	$(PYTHON) "$(DIR)/app/manage.py" test "$(DIR)/app" ;\
+	$(TOX) -e=py37 ;\
 	if [ $$? -eq 0 ]; then \
 		echo -e "${STATUS_OK}" ;\
 	else \

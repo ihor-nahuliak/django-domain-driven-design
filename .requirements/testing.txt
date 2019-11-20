@@ -1,5 +1,6 @@
 -r ./product.txt
 
+tox==3.14.1
 django-nose==1.4.6
 nose-timer==0.7.5
 python-coveralls==2.9.3
