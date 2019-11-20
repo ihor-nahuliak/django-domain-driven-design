@@ -26,10 +26,6 @@ before_install:
 install:
   - pip install -r .requirements/testing.txt
 script:
-  - python app/manage.py test app
-  - pycodestyle --config=.pycodestyle app
-  - flake8 --config=.flake8 app
-  - mypy --config-file=.mypyrc app
-  - pylint --rcfile=.pylintrc app
+  - tox
 after_success:
   - coveralls

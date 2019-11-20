@@ -1,11 +1,11 @@
 import os
 
 
-DATABASE_HOST = os.environ.get('DATABASE_HOST', '127.0.0.1')
-DATABASE_PORT = os.environ.get('DATABASE_PORT', '5432')
-DATABASE_USERNAME = os.environ.get('DATABASE_USERNAME', 'postgres')
-DATABASE_PASSWORD = os.environ.get('DATABASE_PASSWORD', '')
-DATABASE_NAME = os.environ.get('DATABASE_NAME', 'project')
+DATABASE_HOST = os.getenv('DATABASE_HOST', '127.0.0.1')
+DATABASE_PORT = os.getenv('DATABASE_PORT', '5432')
+DATABASE_USERNAME = os.getenv('DATABASE_USERNAME', 'postgres')
+DATABASE_PASSWORD = os.getenv('DATABASE_PASSWORD', '')
+DATABASE_NAME = os.getenv('DATABASE_NAME', 'project')
 
 DATABASES = {
     'default': {
