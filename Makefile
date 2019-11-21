@@ -15,7 +15,8 @@ help:
 DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 SHELL=/bin/bash
 
-GLOBAL_PYTHON = /usr/bin/python3.7
+GLOBAL_PYTHON_PY37 = /usr/bin/python3.7
+GLOBAL_PYTHON_PY38 = /usr/bin/python3.8
 ENV := $(DIR)/env
 PYTHON := $(ENV)/bin/python
 PIP := $(ENV)/bin/pip
@@ -51,10 +52,21 @@ install-git-hooks:
 		exit 1 ;\
 	fi;
 
-install-env-python:
-	@echo -e "${STATUS_INFO} install-env-python" ;\
+install-env-python-py37:
+	@echo -e "${STATUS_INFO} install-env-python-py37" ;\
 	rm -rf "$(ENV)/" ;\
-	virtualenv -p $(GLOBAL_PYTHON) --clear "$(ENV)/" ;\
+	virtualenv -p $(GLOBAL_PYTHON_PY37) --clear "$(ENV)/" ;\
+	if [ $$? -eq 0 ]; then \
+		echo -e "${STATUS_OK}" ;\
+	else \
+		echo -e "${STATUS_ERROR}" ;\
+		exit 1 ;\
+	fi;
+
+install-env-python-py38:
+	@echo -e "${STATUS_INFO} install-env-python-py38" ;\
+	rm -rf "$(ENV)/" ;\
+	virtualenv -p $(GLOBAL_PYTHON_PY38) --clear "$(ENV)/" ;\
 	if [ $$? -eq 0 ]; then \
 		echo -e "${STATUS_OK}" ;\
 	else \
@@ -86,7 +98,7 @@ install-python-libs:
 		exit 1 ;\
 	fi;
 
-install: install-git-hooks install-env-python env-activate install-python-libs
+install: install-git-hooks install-env-python-py37 env-activate install-python-libs
 
 
 migrate:
