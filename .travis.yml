@@ -3,6 +3,8 @@ language: python
 python:
   - "3.7"
   - "3.7-dev"  # 3.7 development branch
+  - "3.8"
+  - "3.8-dev"  # 3.8 development branch
 addons:
   postgresql: "10"
   apt:
@@ -27,9 +29,9 @@ install:
   - pip install -r .requirements/testing.txt
 script:
   - python app/manage.py test app
-  - pycodestyle --config=.pycodestyle app
-  - flake8 --config=.flake8 app
-  - mypy --config-file=.mypyrc app
-  - pylint --rcfile=.pylintrc app
+  - pycodestyle --config=tox.ini app
+  - flake8 --config=tox.ini app
+  - mypy --config-file=tox.ini app
+  - pylint --rcfile=tox.ini app
 after_success:
   - coveralls

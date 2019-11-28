@@ -2,10 +2,13 @@
 default: help ;
 
 help:
-	@echo 'Makefile commands:' ;\
+	@echo 'Makefile commands (backend develop team usage only):' ;\
 	echo '    * make help       Shows this help information.' ;\
 	echo '    * make clean      Clear local virtual environment and compiled python files.' ;\
 	echo '    * make install    Install virtual environment and python libraries locally.' ;\
+	echo '                      See also: ' ;\
+	echo '                          - make install-py37    Install using python 3.7 (default)' ;\
+	echo '                          - make install-py38    Install using python 3.8' ;\
 	echo '    * make migrate    Run all database migrations locally.' ;\
 	echo '    * make test       Run unit and integration tests generating coverage report.' ;\
 	echo '    * make run        Run application in development mode.' ;\
@@ -15,15 +18,15 @@ help:
 DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 SHELL=/bin/bash
 
-GLOBAL_PYTHON = /usr/bin/python3.7
+GLOBAL_PY37 = /usr/bin/python3.7
+GLOBAL_PY38 = /usr/bin/python3.8
 ENV := $(DIR)/env
 PYTHON := $(ENV)/bin/python
-LIB := $(ENV)/lib/python3.7/site-packages
 PIP := $(ENV)/bin/pip
-PEP8 := $(ENV)/bin/pycodestyle --config="$(DIR)/.pycodestyle"
-FLAKE8 := $(ENV)/bin/flake8 --config="$(DIR)/.flake8"
-PYLINT := $(ENV)/bin/pylint --rcfile="$(DIR)/.pylintrc"
-MYPY := $(ENV)/bin/mypy --config-file="$(DIR)/.mypyrc"
+PEP8 := $(ENV)/bin/pycodestyle --config="$(DIR)/tox.ini"
+FLAKE8 := $(ENV)/bin/flake8 --config="$(DIR)/tox.ini"
+PYLINT := $(ENV)/bin/pylint --rcfile="$(DIR)/tox.ini"
+MYPY := $(ENV)/bin/mypy --config-file="$(DIR)/tox.ini"
 
 STATUS_INFO := \r\n\033[1;94m\xF0\x9F\x91\xA3 \033[0m
 STATUS_ERROR := \033[1;31m\xE2\x9C\x96\033[0m [Error]
@@ -55,10 +58,21 @@ install-git-hooks:
 		exit 1 ;\
 	fi;
 
-install-env-python:
-	@echo -e "${STATUS_INFO} install-env-python" ;\
+install-env-py37:
+	@echo -e "${STATUS_INFO} install-env-py37" ;\
 	rm -rf "$(ENV)/" ;\
-	virtualenv -p $(GLOBAL_PYTHON) --clear "$(ENV)/" ;\
+	virtualenv -p $(GLOBAL_PY37) --clear "$(ENV)/" ;\
+	if [ $$? -eq 0 ]; then \
+		echo -e "${STATUS_OK}" ;\
+	else \
+		echo -e "${STATUS_ERROR}" ;\
+		exit 1 ;\
+	fi;
+
+install-env-py38:
+	@echo -e "${STATUS_INFO} install-env-py38" ;\
+	rm -rf "$(ENV)/" ;\
+	virtualenv -p $(GLOBAL_PY38) --clear "$(ENV)/" ;\
 	if [ $$? -eq 0 ]; then \
 		echo -e "${STATUS_OK}" ;\
 	else \
@@ -90,7 +104,11 @@ install-python-libs:
 		exit 1 ;\
 	fi;
 
-install: install-git-hooks install-env-python env-activate install-python-libs
+install-py37: install-git-hooks install-env-py37 env-activate install-python-libs
+
+install-py38: install-git-hooks install-env-py38 env-activate install-python-libs
+
+install: install-py37
 
 
 migrate:

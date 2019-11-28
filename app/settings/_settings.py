@@ -1,9 +1,9 @@
 import os
 import typing
 
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'testing')
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'testing')
 
-DEBUG = os.environ.get('DJANGO_DEBUG', False)
+DEBUG = bool(os.getenv('DJANGO_DEBUG'))
 
 PROJECT_ROOT = os.path.abspath(
     os.path.join(__file__, os.pardir, os.pardir, os.pardir)
@@ -17,7 +17,6 @@ STATIC_URL = '/static/'
 
 USE_X_FORWARDED_HOST = True  # Make ViewSet paginate with origin host url
 
-# TODO: Allow just the ones that are being used
 ALLOWED_HOSTS = ['*']
 
 LANGUAGE_CODE = 'en-us'
