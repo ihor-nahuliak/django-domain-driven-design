@@ -5,10 +5,6 @@
 !.gitignore
 !.githooks
 !.requirements
-!.flake8
-!.pycodestyle
-!.pylintrc
-!.mypyrc
 !.coveragerc
 !.coveralls.yml
 !.travis.yml
