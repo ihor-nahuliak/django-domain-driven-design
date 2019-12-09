@@ -27,6 +27,7 @@ PEP8 := $(ENV)/bin/pycodestyle --config="$(DIR)/tox.ini"
 FLAKE8 := $(ENV)/bin/flake8 --config="$(DIR)/tox.ini"
 PYLINT := $(ENV)/bin/pylint --rcfile="$(DIR)/tox.ini"
 MYPY := $(ENV)/bin/mypy --config-file="$(DIR)/tox.ini"
+TOX := $(ENV)/bin/tox
 
 STATUS_INFO := \r\n\033[1;94m\xF0\x9F\x91\xA3 \033[0m
 STATUS_ERROR := \033[1;31m\xE2\x9C\x96\033[0m [Error]
@@ -169,6 +170,16 @@ test-mypy:
 test-unittest:
 	@echo -e "${STATUS_INFO} test-unittest" ;\
 	$(PYTHON) "$(DIR)/app/manage.py" test "$(DIR)/app" ;\
+	if [ $$? -eq 0 ]; then \
+		echo -e "${STATUS_OK}" ;\
+	else \
+		echo -e "${STATUS_ERROR}" ;\
+		exit 1 ;\
+	fi;
+
+test-tox:
+	@echo -e "${STATUS_INFO} test-tox" ;\
+	$(TOX) ;\
 	if [ $$? -eq 0 ]; then \
 		echo -e "${STATUS_OK}" ;\
 	else \

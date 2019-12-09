@@ -3,6 +3,6 @@
 set -e
 
 make migrate
-make test
+make test-tox
 
 exit 0
