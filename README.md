@@ -24,6 +24,13 @@ sudo apt-get update &&\
 sudo apt-get install -y python3.7 python3.7-dev
 ```
 
+To install python 3.8 please do:
+```shell script
+sudo add-apt-repository -y ppa:deadsnakes/ppa &&\
+sudo apt-get update &&\
+sudo apt-get install -y python3.8 python3.8-dev
+```
+
 To install postgresql 10 and required extensions please do:
 ```shell script
 sudo wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add - &&\
@@ -62,5 +69,6 @@ To see additional options run: ```make help```
 ### Testing
 
 To execute tests locally run: ```make test```
+You also can use tox: ```tox```
 
 To see additional options run: ```make help```
