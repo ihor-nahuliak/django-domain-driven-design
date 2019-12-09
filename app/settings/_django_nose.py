@@ -24,5 +24,6 @@ NOSE_ARGS = [
     '--with-coverage',
     '--cover-package=app',
     '--cover-html',
-    '--cover-html-dir=.coverage.html',
+    '--cover-html-dir=.cover.html',
+    '--processes=2',  # parallel testing
 ]
