@@ -26,7 +26,8 @@ before_install:
   - psql -U travis_ci -d postgres -c "CREATE DATABASE travis_ci;"
   - psql -U travis_ci -d travis_ci -c "CREATE EXTENSION postgis;"
 install:
-  - pip install -r .requirements/testing.txt
+  - pip install -r ./requirements.txt
+  - pip install -r ./requirements_tests.txt
 script:
   - python app/manage.py test app
   - pycodestyle --config=tox.ini app

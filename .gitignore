@@ -4,7 +4,6 @@
 # Configs
 !.gitignore
 !.githooks
-!.requirements
 !.coveragerc
 !.coveralls.yml
 !.travis.yml

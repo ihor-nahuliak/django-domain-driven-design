@@ -96,6 +96,7 @@ install-python-libs:
 	@echo -e "${STATUS_INFO} install-python-libs" ;\
 	$(PIP) install -U pip ;\
 	$(PIP) install --no-cache-dir --upgrade -r "$(DIR)/requirements.txt" ;\
+	$(PIP) install --no-cache-dir --upgrade -r "$(DIR)/requirements_tests.txt" ;\
 	echo -e "-------------------------------------------------------------" ;\
 	$(PIP) freeze ;\
 	if [ $$? -eq 0 ]; then \

@@ -1,2 +1,0 @@
--r ./product.txt
--r ./testing.txt

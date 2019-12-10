@@ -1,6 +1,0 @@
-psycopg2-binary==2.8.4
-django==2.2.8
-django-debug-toolbar==2.0
-djangorestframework==3.10.3
-django-oauth-toolkit==1.2.0
-django-modeltranslation==0.13.3
