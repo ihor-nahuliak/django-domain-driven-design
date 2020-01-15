@@ -12,6 +12,12 @@ Dependencies:
     * ubuntu 16.04
     * python3.7
     * python3.7-dev
+    * python3.7-venv
+    * python3.7-distutils
+    * python3.8
+    * python3.8-dev
+    * python3.8-venv
+    * python3.8-distutils
     * postgresql-10
     * postgresql-client-10
     * postgresql-contrib-10
@@ -21,14 +27,16 @@ To install python 3.7 please do:
 ```shell script
 sudo add-apt-repository -y ppa:deadsnakes/ppa &&\
 sudo apt-get update &&\
-sudo apt-get install -y python3.7 python3.7-dev
+sudo apt-get install -y python3.7 python3.7-dev &&\
+python3.7 --version
 ```
 
 To install python 3.8 please do:
 ```shell script
 sudo add-apt-repository -y ppa:deadsnakes/ppa &&\
 sudo apt-get update &&\
-sudo apt-get install -y python3.8 python3.8-dev
+sudo apt-get install -y python3.8 python3.8-dev &&\
+python3.8 --version
 ```
 
 To install postgresql 10 and required extensions please do:
@@ -40,7 +48,8 @@ sudo apt-get install -y \
 postgresql-10 \
 postgresql-client-10 \
 postgresql-contrib-10 \
-postgresql-10-postgis-scripts
+postgresql-10-postgis-scripts &&\
+psql --version
 ```
 
 To create database with required extensions please do:

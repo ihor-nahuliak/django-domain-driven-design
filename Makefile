@@ -20,7 +20,7 @@ SHELL=/bin/bash
 
 GLOBAL_PY37 = /usr/bin/python3.7
 GLOBAL_PY38 = /usr/bin/python3.8
-ENV := $(DIR)/env
+ENV := $(DIR)/.env
 PYTHON := $(ENV)/bin/python
 PIP := $(ENV)/bin/pip
 PEP8 := $(ENV)/bin/pycodestyle --config="$(DIR)/tox.ini"
@@ -94,6 +94,7 @@ env-activate:
 
 install-python-libs:
 	@echo -e "${STATUS_INFO} install-python-libs" ;\
+	$(PYTHON) -Im ensurepip --upgrade --default-pip ;\
 	$(PIP) install -U pip ;\
 	$(PIP) install --no-cache-dir --upgrade -r "$(DIR)/requirements.txt" ;\
 	$(PIP) install --no-cache-dir --upgrade -r "$(DIR)/requirements_tests.txt" ;\
