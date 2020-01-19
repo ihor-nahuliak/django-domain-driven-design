@@ -1,23 +1,25 @@
 import inspect
-from enum import EnumMeta, Enum
+from enum import Enum, EnumMeta
 
 from django.utils.decorators import classproperty
 from django.utils.functional import cached_property
 
 
 class ChoiceEnumMeta(EnumMeta):
-    def __new__(mcls, name, bases, namespace, **kwargs):
-        if '__doc__' not in namespace:
-            namespace['__doc__'] = cached_property(mcls.__value_doc__)
-        return super().__new__(mcls, name, bases, namespace, **kwargs)
 
-    def __repr__(cls):
+    def __new__(metacls, cls, bases, classdict):  # noqa: N804
+        # pylint: disable=bad-mcs-classmethod-argument
+        if '__doc__' not in classdict:
+            classdict['__doc__'] = cached_property(metacls.__value_doc__)
+        return super().__new__(metacls, cls, bases, classdict)
+
+    def __repr__(cls):  # noqa: N805
         return '{classname}({choices})'.format(
             classname=cls.__name__,
             choices=str(cls.items())[1:-1],
         )
 
-    def __value_doc__(cls):
+    def __value_doc__(cls):  # noqa: N805
         """
         Inspects your ChoiceEnum class
         taking inline comment near the enum value definition.
@@ -112,7 +114,8 @@ class ChoiceEnum(Enum, metaclass=ChoiceEnumMeta):
         return items_list
 
     @classproperty
-    def choices(cls):
+    def choices(cls):  # noqa: N805
+        # pylint: disable=no-self-argument
         choices_tuple = tuple(
             (item.value, repr(item))
             for item in cls
@@ -131,6 +134,7 @@ class ChoiceEnum(Enum, metaclass=ChoiceEnumMeta):
         return self.value
 
     def __eq__(self, other):
+        # pylint: disable=comparison-with-callable
         if isinstance(other, int):
             return self.value == other
         if isinstance(other, str):

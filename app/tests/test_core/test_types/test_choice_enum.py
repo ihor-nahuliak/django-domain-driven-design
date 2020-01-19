@@ -1,7 +1,7 @@
 import unittest
 from enum import Enum
 
-from core.types import ChoiceEnum
+from app.core.types import ChoiceEnum
 
 
 class TestCase(unittest.TestCase):
@@ -17,11 +17,15 @@ class TestCase(unittest.TestCase):
         self.assertTrue(issubclass(ChoiceEnum, Enum))
 
     def test_it_returns_value_by_name(self):
+        # pylint: disable=no-member
+        #     (Instance of 'int' has no 'name' member)
         self.assertEqual(0, self.EmailType.other.value)
         self.assertEqual(1, self.EmailType.personal.value)
         self.assertEqual(2, self.EmailType.corporate.value)
 
     def test_it_returns_name(self):
+        # pylint: disable=no-member
+        #     (Instance of 'int' has no 'name' member)
         self.assertEqual('other', self.EmailType.other.name)
         self.assertEqual('personal', self.EmailType.personal.name)
         self.assertEqual('corporate', self.EmailType.corporate.name)
