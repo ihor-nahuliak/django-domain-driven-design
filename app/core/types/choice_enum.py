@@ -1,7 +1,6 @@
 import inspect
 from enum import Enum, EnumMeta
 
-from django.utils.decorators import classproperty
 from django.utils.functional import cached_property
 
 
@@ -13,7 +12,25 @@ class ChoiceEnumMeta(EnumMeta):
             classdict['__doc__'] = cached_property(metacls.__value_doc__)
         return super().__new__(metacls, cls, bases, classdict)
 
+    def items(cls):  # noqa: N805
+        # pylint: disable=no-value-for-parameter
+        items_list = [
+            (item.name, item.value)
+            for item in cls.__iter__()
+        ]
+        return items_list
+
+    @property
+    def choices(cls):  # noqa: N805
+        # pylint: disable=no-value-for-parameter
+        choices_tuple = tuple(
+            (item.value, repr(item))
+            for item in cls.__iter__()
+        )
+        return choices_tuple
+
     def __repr__(cls):  # noqa: N805
+        # pylint: disable=no-value-for-parameter
         return '{classname}({choices})'.format(
             classname=cls.__name__,
             choices=str(cls.items())[1:-1],
@@ -27,19 +44,17 @@ class ChoiceEnumMeta(EnumMeta):
         :rtype: str | None
         :return: inline comment
         """
+        # pylint: disable=no-value-for-parameter
         doc = None
 
-        module = inspect.getmodule(cls)
-        lines_list, _ = inspect.getsourcelines(module)
-
-        class_def = 'class {}'.format(cls.__class__.__name__)
-        for i, line in enumerate(lines_list):
-            if class_def in line:
-                lines_list = lines_list[i:]
-                break
+        try:
+            lines_list, _ = inspect.getsourcelines(cls.__objclass__)
+        except OSError:
+            module = inspect.getmodule(cls.__objclass__)
+            lines_list, _ = inspect.getsourcelines(module)
 
         value_def = ' {} = {}'.format(cls.name, cls.value)
-        for i, line in enumerate(lines_list):
+        for line in lines_list:
             if value_def in line and '#' in line:
                 _, inline_comment = line.split('#')
                 doc = inspect.cleandoc(inline_comment)
@@ -104,23 +119,6 @@ class ChoiceEnum(Enum, metaclass=ChoiceEnumMeta):
     'for work'
 
     """
-
-    @classmethod
-    def items(cls):
-        items_list = [
-            (item.name, item.value)
-            for item in cls
-        ]
-        return items_list
-
-    @classproperty
-    def choices(cls):  # noqa: N805
-        # pylint: disable=no-self-argument
-        choices_tuple = tuple(
-            (item.value, repr(item))
-            for item in cls
-        )
-        return choices_tuple
 
     def __repr__(self):
         if self.__doc__:

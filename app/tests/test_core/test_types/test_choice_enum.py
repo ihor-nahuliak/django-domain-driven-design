@@ -4,14 +4,19 @@ from enum import Enum
 from app.core.types import ChoiceEnum
 
 
-class TestCase(unittest.TestCase):
-    def setUp(self):
-        class EmailType(ChoiceEnum):
-            other = 0
-            personal = 1  # for home
-            corporate = 2  # for work
+class EmailType(ChoiceEnum):
+    other = 0
+    personal = 1  # for home
+    corporate = 2  # for work
 
-        self.EmailType = EmailType
+
+class PhoneType(ChoiceEnum):
+    other = 0
+    personal = 1  # mobile
+    corporate = 2  # call center
+
+
+class TestCase(unittest.TestCase):
 
     def test_it_is_enum_subtype(self):
         self.assertTrue(issubclass(ChoiceEnum, Enum))
@@ -19,63 +24,63 @@ class TestCase(unittest.TestCase):
     def test_it_returns_value_by_name(self):
         # pylint: disable=no-member
         #     (Instance of 'int' has no 'name' member)
-        self.assertEqual(0, self.EmailType.other.value)
-        self.assertEqual(1, self.EmailType.personal.value)
-        self.assertEqual(2, self.EmailType.corporate.value)
+        self.assertEqual(0, EmailType.other.value)
+        self.assertEqual(1, EmailType.personal.value)
+        self.assertEqual(2, EmailType.corporate.value)
 
     def test_it_returns_name(self):
         # pylint: disable=no-member
         #     (Instance of 'int' has no 'name' member)
-        self.assertEqual('other', self.EmailType.other.name)
-        self.assertEqual('personal', self.EmailType.personal.name)
-        self.assertEqual('corporate', self.EmailType.corporate.name)
+        self.assertEqual('other', EmailType.other.name)
+        self.assertEqual('personal', EmailType.personal.name)
+        self.assertEqual('corporate', EmailType.corporate.name)
 
     def test_it_has_inline_doc(self):
-        self.assertIsNone(self.EmailType.other.__doc__)
-        self.assertEqual('for home', self.EmailType.personal.__doc__)
-        self.assertEqual('for work', self.EmailType.corporate.__doc__)
+        self.assertIsNone(EmailType.other.__doc__)
+        self.assertEqual('for home', EmailType.personal.__doc__)
+        self.assertEqual('for work', EmailType.corporate.__doc__)
 
     def test_it_is_compatible_with_int_value(self):
-        self.assertEqual(0, self.EmailType.other)
-        self.assertNotEqual(1, self.EmailType.other)
-        self.assertNotEqual(2, self.EmailType.other)
+        self.assertEqual(0, EmailType.other)
+        self.assertNotEqual(1, EmailType.other)
+        self.assertNotEqual(2, EmailType.other)
 
-        self.assertNotEqual(0, self.EmailType.personal)
-        self.assertEqual(1, self.EmailType.personal)
-        self.assertNotEqual(2, self.EmailType.personal)
+        self.assertNotEqual(0, EmailType.personal)
+        self.assertEqual(1, EmailType.personal)
+        self.assertNotEqual(2, EmailType.personal)
 
-        self.assertNotEqual(0, self.EmailType.corporate)
-        self.assertNotEqual(1, self.EmailType.corporate)
-        self.assertEqual(2, self.EmailType.corporate)
+        self.assertNotEqual(0, EmailType.corporate)
+        self.assertNotEqual(1, EmailType.corporate)
+        self.assertEqual(2, EmailType.corporate)
 
     def test_it_is_compatible_with_str_value(self):
-        self.assertEqual('other', self.EmailType.other)
-        self.assertNotEqual('personal', self.EmailType.other)
-        self.assertNotEqual('corporate', self.EmailType.other)
+        self.assertEqual('other', EmailType.other)
+        self.assertNotEqual('personal', EmailType.other)
+        self.assertNotEqual('corporate', EmailType.other)
 
-        self.assertNotEqual('other', self.EmailType.personal)
-        self.assertEqual('personal', self.EmailType.personal)
-        self.assertNotEqual('corporate', self.EmailType.personal)
+        self.assertNotEqual('other', EmailType.personal)
+        self.assertEqual('personal', EmailType.personal)
+        self.assertNotEqual('corporate', EmailType.personal)
 
-        self.assertNotEqual('other', self.EmailType.corporate)
-        self.assertNotEqual('personal', self.EmailType.corporate)
-        self.assertEqual('corporate', self.EmailType.corporate)
+        self.assertNotEqual('other', EmailType.corporate)
+        self.assertNotEqual('personal', EmailType.corporate)
+        self.assertEqual('corporate', EmailType.corporate)
 
     def test_it_is_compatible_with_enum_value(self):
-        self.assertEqual(self.EmailType.other, self.EmailType.other)
-        self.assertNotEqual(self.EmailType.personal, self.EmailType.other)
-        self.assertNotEqual(self.EmailType.corporate, self.EmailType.other)
+        self.assertEqual(EmailType.other, EmailType.other)
+        self.assertNotEqual(EmailType.personal, EmailType.other)
+        self.assertNotEqual(EmailType.corporate, EmailType.other)
 
-        self.assertNotEqual(self.EmailType.other, self.EmailType.personal)
-        self.assertEqual(self.EmailType.personal, self.EmailType.personal)
-        self.assertNotEqual(self.EmailType.corporate, self.EmailType.personal)
+        self.assertNotEqual(EmailType.other, EmailType.personal)
+        self.assertEqual(EmailType.personal, EmailType.personal)
+        self.assertNotEqual(EmailType.corporate, EmailType.personal)
 
-        self.assertNotEqual(self.EmailType.other, self.EmailType.corporate)
-        self.assertNotEqual(self.EmailType.personal, self.EmailType.corporate)
-        self.assertEqual(self.EmailType.corporate, self.EmailType.corporate)
+        self.assertNotEqual(EmailType.other, EmailType.corporate)
+        self.assertNotEqual(EmailType.personal, EmailType.corporate)
+        self.assertEqual(EmailType.corporate, EmailType.corporate)
 
     def test_items_method_returns_dict_like_list(self):
-        d = dict(self.EmailType.items())
+        d = dict(EmailType.items())
 
         self.assertDictEqual({
             'other': 0,
@@ -84,7 +89,7 @@ class TestCase(unittest.TestCase):
         }, d)
 
     def test_choices_property_returns_dict_like_list(self):
-        d = dict(self.EmailType.choices)
+        d = dict(EmailType.choices)
 
         self.assertDictEqual({
             0: 'other',
@@ -95,8 +100,21 @@ class TestCase(unittest.TestCase):
     def test_it_can_be_represented_with_inline_docs(self):
         self.assertEqual(
             "EmailType(('other', 0), ('personal', 1), ('corporate', 2))",
-            repr(self.EmailType)
+            repr(EmailType)
         )
+
+    def test_it_founds_right_comment_of_right_class(self):
+        self.assertDictEqual({
+            0: 'other',
+            1: 'personal (for home)',
+            2: 'corporate (for work)',
+        }, dict(EmailType.choices))
+
+        self.assertDictEqual({
+            0: 'other',
+            1: 'personal (mobile)',
+            2: 'corporate (call center)',
+        }, dict(PhoneType.choices))
 
 
 if __name__ == '__main__':
