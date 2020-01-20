@@ -6,14 +6,14 @@ from app.core.types import ChoiceEnum
 
 class EmailType(ChoiceEnum):
     other = 0
-    personal = 1  # for home
-    corporate = 2  # for work
+    personal = 1
+    corporate = 2
 
 
 class PhoneType(ChoiceEnum):
     other = 0
-    personal = 1  # mobile
-    corporate = 2  # call center
+    personal = 1
+    corporate = 2
 
 
 class TestCase(unittest.TestCase):
@@ -34,11 +34,6 @@ class TestCase(unittest.TestCase):
         self.assertEqual('other', EmailType.other.name)
         self.assertEqual('personal', EmailType.personal.name)
         self.assertEqual('corporate', EmailType.corporate.name)
-
-    def test_it_has_inline_doc(self):
-        self.assertIsNone(EmailType.other.__doc__)
-        self.assertEqual('for home', EmailType.personal.__doc__)
-        self.assertEqual('for work', EmailType.corporate.__doc__)
 
     def test_it_is_compatible_with_int_value(self):
         self.assertEqual(0, EmailType.other)
@@ -93,28 +88,18 @@ class TestCase(unittest.TestCase):
 
         self.assertDictEqual({
             0: 'other',
-            1: 'personal (for home)',
-            2: 'corporate (for work)',
+            1: 'personal',
+            2: 'corporate',
         }, d)
 
-    def test_it_can_be_represented_with_inline_docs(self):
-        self.assertEqual(
-            "EmailType(('other', 0), ('personal', 1), ('corporate', 2))",
-            repr(EmailType)
-        )
-
-    def test_it_founds_right_comment_of_right_class(self):
-        self.assertDictEqual({
-            0: 'other',
-            1: 'personal (for home)',
-            2: 'corporate (for work)',
-        }, dict(EmailType.choices))
+    def test_choices_property_works_with_different_classes(self):
+        d = dict(PhoneType.choices)
 
         self.assertDictEqual({
             0: 'other',
-            1: 'personal (mobile)',
-            2: 'corporate (call center)',
-        }, dict(PhoneType.choices))
+            1: 'personal',
+            2: 'corporate',
+        }, d)
 
 
 if __name__ == '__main__':
