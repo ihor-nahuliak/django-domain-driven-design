@@ -79,11 +79,6 @@ class ChoiceEnum(Enum, metaclass=ChoiceEnumMeta):
 
     """
 
-    def __repr__(self):
-        if self.__doc__:
-            return f'{self.name} ({self.__doc__})'
-        return self.name
-
     def __str__(self):
         return self.name
 
