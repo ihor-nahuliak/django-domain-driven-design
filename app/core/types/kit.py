@@ -63,12 +63,10 @@ class Kit(enum.Enum, metaclass=KitMeta):
     True
     >>> EmailType.personal == 2
     False
-    True
     >>> EmailType.personal == 'personal'
     True
     >>> EmailType.personal == 'corporate'
     False
-    True
     >>> EmailType.personal == EmailType.personal
     True
     >>> EmailType.personal == EmailType.corporate
