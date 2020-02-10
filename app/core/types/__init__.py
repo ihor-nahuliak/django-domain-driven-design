@@ -1,4 +1,4 @@
-from .choice_enum import ChoiceEnum
+from .kit import Kit
 
 
-__all__ = ['ChoiceEnum']
+__all__ = ['Kit']
